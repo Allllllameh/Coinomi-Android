@@ -476,13 +476,23 @@
 
         function saveState() { localStorage.setItem('coinomi_app_state', JSON.stringify(state)); }
 
-        const navigation = {
+                const navigation = {
             showScreen: function(screenId) {
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
                 document.getElementById(screenId).classList.add('active');
+                
+                // به جاوا اطلاع می‌دهیم که در کدام صفحه هستیم
+                if (window.Android) {
+                    if (screenId === 'main-screen') {
+                        window.Android.setMainScreenActive();
+                    } else {
+                        window.Android.setAssetScreenActive();
+                    }
+                }
+
                 if (screenId === 'main-screen') {
                     document.getElementById('main-fab').classList.remove('hidden');
-                    this.renderMainList();
+                    renderMainList();
                 } else {
                     document.getElementById('main-fab').classList.add('hidden');
                 }
@@ -1112,18 +1122,6 @@
         renderMainList();
         fetchPrices();
         updateNetworkStatus();
-                // مدیریت دکمه برگشت گوشی
-        function handleBackButton() {
-            if (document.getElementById('asset-screen').classList.contains('active')) {
-                if (document.getElementById('tab-send').classList.contains('active')) {
-                    switchTab('balance');
-                } else {
-                    navigation.showScreen('main-screen');
-                }
-                return true; // یعنی برنامه خودش مدیریت کرد
-            }
-            return false; // یعنی در صفحه اصلی هستیم، بگذارید برنامه بسته شود
-        }
     </script>
 </body>
 </html>
