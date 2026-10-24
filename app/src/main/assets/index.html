@@ -1112,6 +1112,18 @@
         renderMainList();
         fetchPrices();
         updateNetworkStatus();
+                // مدیریت دکمه برگشت گوشی
+        function handleBackButton() {
+            if (document.getElementById('asset-screen').classList.contains('active')) {
+                if (document.getElementById('tab-send').classList.contains('active')) {
+                    switchTab('balance');
+                } else {
+                    navigation.showScreen('main-screen');
+                }
+                return true; // یعنی برنامه خودش مدیریت کرد
+            }
+            return false; // یعنی در صفحه اصلی هستیم، بگذارید برنامه بسته شود
+        }
     </script>
 </body>
 </html>
