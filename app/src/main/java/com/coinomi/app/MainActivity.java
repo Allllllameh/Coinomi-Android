@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
-import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -24,6 +23,9 @@ import androidx.core.content.ContextCompat;
 public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
+    
+    // متغیری برای اینکه جاوا بداند الان در کدام صفحه هستیم
+    private boolean isAssetActive = false; 
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -83,31 +85,28 @@ public class MainActivity extends AppCompatActivity {
             }
             return "";
         }
+
+        // این دو تابع از طرف جاوااسکریپت صدا زده می‌شوند تا موقعیت را به جاوا بگویند
+        @JavascriptInterface
+        public void setMainScreenActive() { 
+            isAssetActive = false; 
+        }
+
+        @JavascriptInterface
+        public void setAssetScreenActive() { 
+            isAssetActive = true; 
+        }
     }
 
-    // مدیریت دکمه برگشت مستقیماً در جاوا
+    // منطق جدید و بدون باگ برای دکمه برگشت
     @Override
     public void onBackPressed() {
-        String jsCode = 
-            "var assetScreen = document.getElementById('asset-screen');" +
-            "if (assetScreen && assetScreen.classList.contains('active')) {" +
-            "  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });" +
-            "  document.getElementById('main-screen').classList.add('active');" +
-            "  var fab = document.getElementById('main-fab'); if (fab) fab.classList.remove('hidden');" +
-            "  if (typeof renderMainList === 'function') renderMainList();" +
-            "  'true';" + // برمی‌گرداند true یعنی خودم صفحه رو عوض کردم
-            "} else {" +
-            "  'false';" + // برمی‌گرداند false یعنی در صفحه اصلی هستیم
-            "}";
-
-        webView.evaluateJavascript("(function(){" + jsCode + "})()", new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String value) {
-                // خروجی جاوااسکریپت همیشه با کوتیشن برمی‌گردد (مثل "true")
-                if (!"\"true\"".equals(value)) {
-                    MainActivity.super.onBackPressed(); // فقط در صفحه اصلی برنامه بسته شود
-                }
-            }
-        });
+        if (isAssetActive) {
+            // اگر در صفحه جزئیات بودیم، به جاوااسکریپت می‌گوییم برو به صفحه اصلی
+            webView.evaluateJavascript("navigation.showScreen('main-screen');", null);
+        } else {
+            // اگر در صفحه اصلی بودیم، برنامه را ببند
+            super.onBackPressed();
+        }
     }
 }
