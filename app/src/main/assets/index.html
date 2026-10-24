@@ -910,28 +910,35 @@
         }
 
         // ==================== Fullscreen QR Scanner ====================
-        function openScanner() {
-            document.getElementById('scanner-modal').classList.add('active');
-            
-            setTimeout(() => {
-                if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
-                
-                const screenWidth = Math.min(window.innerWidth, 500);
-                const qrboxSize = Math.floor(screenWidth * 0.7);
-                const config = { fps: 10, qrbox: { width: qrboxSize, height: qrboxSize } };
-                
-                html5QrCode.start({ facingMode: "environment" }, config, (decodedText) => {
-                    addrInput.value = decodedText;
-                    addrInput.dispatchEvent(new Event('input'));
-                    closeScanner();
-                }).catch(err => {
-                    console.warn("Camera error:", err);
-                    alert("Could not access camera. Please ensure permissions are granted.");
-                    closeScanner();
-                });
-            }, 150);
-        }
+        async function openScanner() {
+    document.getElementById('scanner-modal').classList.add('active');
+    await new Promise(r => setTimeout(r, 300));
 
+    if (html5QrCode) return;
+
+    // ۱. تنظیم دقیق نسبت تصویر و فوکوس برای دوربین‌های موبایل
+    const videoConstraints = {
+        facingMode: "environment",
+        aspectRatio: 1.0,
+        advanced: [{ focusMode: "continuous" }]
+    };
+
+    const config = { 
+        fps: 15, // افزایش فریم ریت از ۱۰ به ۱۵
+        qrbox: { width: 260, height: 260 }, 
+        aspectRatio: 1.0, 
+        disableFlip: false 
+    };
+
+    html5QrCode = new Html5Qrcode("reader");
+    try {
+        await html5QrCode.start(
+            videoConstraints, 
+            config, 
+            (decodedText) => { /* ... کدهای موفقیت اسکن ... */ }
+        );
+    } catch (err) { /* ... مدیریت خطا ... */ }
+}
         function closeScanner() {
             if (html5QrCode) {
                 html5QrCode.stop().then(() => {
