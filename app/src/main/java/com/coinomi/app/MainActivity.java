@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         webView.loadUrl("file:///android_asset/index.html");
     }
 
+    // کلاس کمکی برای خواندن کلیپ‌بورد
     public class WebAppInterface {
         Context mContext;
         WebAppInterface(Context c) { mContext = c; }
@@ -88,8 +90,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // ۲. مدیریت دکمه برگشت گوشی
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) { webView.goBack(); } else { super.onBackPressed(); }
+        webView.evaluateJavascript("handleBackButton();", new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                // اگر جاوااسکریپت مقدار true برگرداند، یعنی خودش صفحه را عوض کرد
+                // اگر false برگرداند، یعنی در صفحه اصلی هستیم و برنامه باید بسته شود
+                if (!"true".equals(value)) {
+                    MainActivity.super.onBackPressed();
+                }
+            }
+        });
     }
 }
