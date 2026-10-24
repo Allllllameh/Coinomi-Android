@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // ۱. تغییر رنگ نوار وضعیت (باتری و ساعت) به رنگ آبی هدر
         Window window = getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.setStatusBarColor(Color.parseColor("#3171E1"));
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         webView = new WebView(this);
         setContentView(webView);
 
-        // درخواست مجوز دوربین
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
         }
@@ -51,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setAllowContentAccess(true);
         webSettings.setMediaPlaybackRequiresUserGesture(false);
 
-        // اتصال برای خواندن کلیپ‌بورد (Paste)
         webView.addJavascriptInterface(new WebAppInterface(this), "Android");
 
         webView.setWebViewClient(new WebViewClient());
@@ -72,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         webView.loadUrl("file:///android_asset/index.html");
     }
 
-    // کلاس کمکی برای خواندن کلیپ‌بورد
     public class WebAppInterface {
         Context mContext;
         WebAppInterface(Context c) { mContext = c; }
@@ -90,14 +86,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // ۲. مدیریت دکمه برگشت گوشی
     @Override
     public void onBackPressed() {
+        // این کد از جاوااسکریپت می‌پرسد که آیا خودش صفحه را هندل می‌کند یا نه
         webView.evaluateJavascript("handleBackButton();", new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
-                // اگر جاوااسکریپت مقدار true برگرداند، یعنی خودش صفحه را عوض کرد
-                // اگر false برگرداند، یعنی در صفحه اصلی هستیم و برنامه باید بسته شود
+                // اگر خروجی true باشد، یعنی جاوااسکریپت ما را به صفحه اصلی برد
+                // اگر false باشد، یعنی در صفحه اصلی هستیم و برنامه باید بسته شود
                 if (!"true".equals(value)) {
                     MainActivity.super.onBackPressed();
                 }
