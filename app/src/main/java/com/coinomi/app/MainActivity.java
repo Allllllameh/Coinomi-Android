@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setMediaPlaybackRequiresUserGesture(false);
 
         webView.addJavascriptInterface(new WebAppInterface(this), "Android");
-
         webView.setWebViewClient(new WebViewClient());
         
         webView.setWebChromeClient(new WebChromeClient() {
@@ -86,16 +85,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // مدیریت دکمه برگشت مستقیماً در جاوا
     @Override
     public void onBackPressed() {
-        // این کد از جاوااسکریپت می‌پرسد که آیا خودش صفحه را هندل می‌کند یا نه
-        webView.evaluateJavascript("handleBackButton();", new ValueCallback<String>() {
+        String jsCode = 
+            "var assetScreen = document.getElementById('asset-screen');" +
+            "if (assetScreen && assetScreen.classList.contains('active')) {" +
+            "  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });" +
+            "  document.getElementById('main-screen').classList.add('active');" +
+            "  var fab = document.getElementById('main-fab'); if (fab) fab.classList.remove('hidden');" +
+            "  if (typeof renderMainList === 'function') renderMainList();" +
+            "  'true';" + // برمی‌گرداند true یعنی خودم صفحه رو عوض کردم
+            "} else {" +
+            "  'false';" + // برمی‌گرداند false یعنی در صفحه اصلی هستیم
+            "}";
+
+        webView.evaluateJavascript("(function(){" + jsCode + "})()", new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
-                // اگر خروجی true باشد، یعنی جاوااسکریپت ما را به صفحه اصلی برد
-                // اگر false باشد، یعنی در صفحه اصلی هستیم و برنامه باید بسته شود
-                if (!"true".equals(value)) {
-                    MainActivity.super.onBackPressed();
+                // خروجی جاوااسکریپت همیشه با کوتیشن برمی‌گردد (مثل "true")
+                if (!"\"true\"".equals(value)) {
+                    MainActivity.super.onBackPressed(); // فقط در صفحه اصلی برنامه بسته شود
                 }
             }
         });
