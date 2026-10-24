@@ -843,17 +843,27 @@
         }
 
         async function pasteAddress() {
-            try {
-                const text = await navigator.clipboard.readText();
-                if (text) {
-                    addrInput.value = text.trim();
-                    addrInput.dispatchEvent(new Event('input'));
-                }
-            } catch (err) {
-                alert('Clipboard access denied. Please paste manually.');
+    try {
+        // تلاش برای استفاده از API استاندارد وب
+        const text = await navigator.clipboard.readText();
+        if (text) {
+            addrInput.value = text.trim();
+            addrInput.dispatchEvent(new Event('input'));
+            return;
+        }
+    } catch (err) {
+        // اگر API وب مسدود بود، از پل جاوا استفاده کن
+        if (window.Android && window.Android.getClipboardText) {
+            const nativeText = window.Android.getClipboardText();
+            if (nativeText) {
+                addrInput.value = nativeText.trim();
+                addrInput.dispatchEvent(new Event('input'));
+                return;
             }
         }
-
+        alert('دسترسی به حافظه امکان‌پذیر نیست. لطفاً به صورت دستی پیست کنید.');
+    }
+}
         function prepareSend() {
             const address = document.getElementById('send-address').value.trim();
             const amount = parseFloat(document.getElementById('send-amount').value);
