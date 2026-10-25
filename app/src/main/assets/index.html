@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;350;400;500;700&family=Varela+Round&family=Lilex:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Roboto:wght@300;350;400;450;500;700&display=swap" rel="stylesheet">
     
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: 'Roboto', sans-serif; }
@@ -38,14 +38,14 @@
         @keyframes slide { 0% { left: -40%; } 100% { left: 100%; } }
 
         .total-balance { text-align: center; padding: 25px 0 10px 0; display: flex; justify-content: center; align-items: center; gap: 3px; }
-        .total-balance .amount { font-family: 'Varela Round', sans-serif; font-size: 54px; font-weight: 300; color: #111111; line-height: 1; letter-spacing: 1px; }
-        .total-balance .currency { font-family: 'Roboto', sans-serif; font-size: 26px; font-weight: 300; color: #999999; line-height: 1; letter-spacing: 1px; padding-top: 6px; }
+        .total-balance .amount { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 54px; font-weight: 500; color: #111111; line-height: 1; letter-spacing: -0.5px; }
+        .total-balance .currency { font-family: 'Roboto', sans-serif; font-size: 26px; font-weight: 350; color: #999999; line-height: 1; letter-spacing: 1px; padding-top: 6px; }
 
         .asset-list { padding: 0 20px; padding-bottom: 80px; }
         .asset-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; cursor: pointer; border-bottom: none; }
         .asset-item:active { background-color: rgba(0,0,0,0.02); border-radius: 8px;}
         
-        .asset-left { display: flex; align-items: center; gap: 16px; }
+        .asset-left { display: flex; align-items: center; gap: 16px; margin-left: -8px; }
         .icon-container { position: relative; width: 32px; height: 32px; }
         .icon-container img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
         
@@ -54,41 +54,203 @@
         .status-dot.red { background-color: #E53935; }
         .status-dot.gray { background-color: #BDBDBD; }
 
-        .asset-info h3 { font-family: 'Varela Round', sans-serif; font-size: 18px; font-weight: 400; color: #000000; line-height: 1.05; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; margin-bottom: 0px; letter-spacing: 0.2px; }
-        .asset-info .price-info { font-family: 'Varela Round', sans-serif; font-size: 14px; font-weight: 400; color: #888888; display: flex; gap: 5px; margin-top: 0px; }
+        .asset-info h3 { font-family: 'Roboto', sans-serif; font-size: 18px; font-weight: 450; color: #000000; line-height: 1.05; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; margin-bottom: 0px; letter-spacing: 0.2px; }
+        
+        .asset-info h3.multi-line {
+            white-space: normal;
+            line-height: 1.15;
+            max-width: 180px;
+        }
+        
+        .asset-info h3.multi-line .line2 {
+            letter-spacing: -0.5px;
+            display: inline-block;
+        }
+        
+        .asset-info .price-info { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 400; color: #888888; display: flex; gap: 5px; margin-top: 0px; }
         .positive { color: #2EAD32; } .negative { color: #E53935; } .neutral { color: #888888; }
 
         .asset-right { text-align: right; display: flex; flex-direction: column; padding-top: 0; }
-        .asset-right .usd-value { font-family: 'Varela Round', sans-serif; font-size: 17px; font-weight: 400; color: #111111; margin-top: -2px; line-height: 1.1; }
-        .asset-right .usd-value span { font-family: 'Varela Round', sans-serif; color: #999999; font-size: 15px; font-weight: 400; }
-        .asset-right .crypto-value { font-family: 'Varela Round', sans-serif; font-size: 15px; font-weight: 400; color: #999999; margin-top: 7px; line-height: 1.1; }
+        .asset-right .usd-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 500; color: #111111; margin-top: -2px; line-height: 1.1; }
+        .asset-right .usd-value span { font-family: 'Roboto', sans-serif; color: #999999; font-size: 15px; font-weight: 400; }
+        .asset-right .crypto-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 400; color: #999999; margin-top: 7px; line-height: 1.1; }
 
         .fab { position: absolute; bottom: 16px; right: 16px; width: 56px; height: 56px; border-radius: 50%; background-color: #3171E1; color: white; border: none; box-shadow: 0 4px 12px rgba(49, 113, 225, 0.4); cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 100; }
         .fab.hidden { display: none !important; }
 
         /* ==================== Asset Screen ==================== */
         #asset-screen { z-index: 20; }
-        .asset-header { background-color: #3171E1; display: flex; flex-direction: column; flex-shrink: 0; z-index: 10; height: 80px; }
+        .asset-header { background-color: #3171E1; display: flex; flex-direction: column; flex-shrink: 0; z-index: 10; height: 80px; position: relative;}
         .asset-top-nav { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; height: 50px; position: relative; }
         .asset-top-nav .menu-btn { transform: translateX(-3px); }
         .asset-top-nav .header-title { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; }
-        .asset-top-nav .header-title h1 { font-size: 18px; font-weight: 500; color: #FFFFFF; margin-bottom: 2px; white-space: nowrap; }
-        .asset-top-nav .header-title p { font-size: 12px; color: rgba(255, 255, 255, 0.7); margin-top: 3px; }
+        .asset-top-nav .header-title h1 { font-family: 'Lato', sans-serif; font-size: 18px; font-weight: 500; color: #FFFFFF; margin-bottom: 2px; white-space: nowrap; }
+        .asset-top-nav .header-title p { font-size: 11px; color: rgba(255, 255, 255, 0.7); margin-top: 3px; }
 
-        .tabs { display: flex; width: 100%; height: 30px; position: relative; }
-        .tab { height: 100%; font-size: 15px; font-family: 'Roboto', sans-serif; font-weight: 400; color: rgba(255, 255, 255, 0.6); cursor: pointer; position: absolute; display: flex; justify-content: center; align-items: center; }
-        .tab.tab-left { left: 16px; } 
-        .tab.tab-center { left: 50%; transform: translateX(-50%); } 
-        .tab.tab-right { right: 16px; }
-        
-        .tab.active { color: #FFFFFF; font-weight: 500; }
-        .tab.active::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 68px; height: 3px; background-color: #FFFFFF; border-radius: 2px 2px 0 0; }
+        /* ==================== BSC-USDT Custom Header ==================== */
+        .trash-icon-img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            display: block;
+        }
 
-        .tab-content { display: none; flex: 1; overflow-y: auto; padding: 20px; background-color: #FFFFFF; position: relative;}
-        .tab-content.active { display: flex; flex-direction: column; }
+        .icon-btn.trash-icon { display: none; }
 
-        /* ==================== Balance Tab ==================== */
-        #tab-balance { padding: 10px 20px; } 
+        #asset-screen.bsc-mode .icon-btn.search-icon { display: none; }
+        #asset-screen.bsc-mode .icon-btn.trash-icon { display: flex; }
+
+        #asset-screen.bsc-mode .header-right {
+            gap: 20px;
+            transform: none;
+            position: static;
+            right: auto;
+        }
+
+        #asset-screen.bsc-mode .asset-top-nav .header-title {
+            left: 52px;
+            top: calc(50% + 4px);
+            transform: translateY(-50%);
+            margin: 0;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        #asset-screen.bsc-mode .asset-top-nav .header-title h1 {
+            font-family: 'Lato', sans-serif;
+            font-size: 18px;
+            font-weight: 400;
+            color: #FFFFFF;
+            margin: 0;
+            line-height: 1.2;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+
+        #asset-screen.bsc-mode .asset-top-nav .header-title p {
+            font-family: 'Lato', sans-serif;
+            font-size: 18px;
+            font-weight: 400;
+            color: #FFFFFF;
+            margin: 0;
+            line-height: 1.2;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+            margin-top: 9px;
+        }
+
+        #asset-screen.bsc-mode.bsc-send-mode .asset-top-nav .header-title h1 {
+            letter-spacing: 0.7px;
+        }
+
+        #asset-screen.bsc-mode.bsc-send-mode .header-right {
+            display: none !important;
+        }
+
+        #asset-screen.bsc-mode #page-send {
+            padding: 20px;
+        }
+
+        #asset-screen.bsc-mode #page-send .amount-footer {
+            margin-top: 5px;
+        }
+
+        #asset-screen.bsc-mode #page-send .currency-large {
+            right: -12px;
+        }
+
+        /* BSC hint: دو خط تضمین‌شده - خط 1 nowrap */
+#asset-screen.bsc-mode #send-hint-text {
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: 0.2px;
+    width: 100%;
+}
+
+        /* Advanced setting toggle - فقط در BSC mode */
+        .advanced-setting-row {
+    display: none;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-top: 38px;
+    padding-right: 5px;
+}
+
+        #asset-screen.bsc-mode .advanced-setting-row {
+            display: flex;
+        }
+
+        .advanced-setting-label {
+            font-size: 12px;
+            color: #666666;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Toggle: بدنه نازک‌تر - دایره بزرگ‌تر */
+        .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 12px;
+    flex-shrink: 0;
+}
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #A8A8A8;
+            transition: .3s;
+            border-radius: 12px;
+        }
+
+        .toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: -4px;
+    top: -5px;
+    background-color: #EEEEEE;
+    transition: .3s;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(168, 168, 168, 0.6);
+}
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #BFD4F5;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+    background-color: #2E6FD9;
+    transform: translateX(20px);
+    box-shadow: 0 1px 2px rgba(111, 163, 234, 0.6);
+}
+
+        .tabs { display: flex; width: 100%; height: 30px; position: relative; overflow: hidden; }
+        .tab { position: absolute; top: 0; height: 100%; display: flex; justify-content: center; align-items: center; font-size: 15px; color: rgba(255, 255, 255, 0.6); transition: color 0.1s linear, font-weight 0.1s linear; font-weight: 400; cursor: default; --line-opacity: 0; white-space: nowrap; }
+        .tab::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 68px; height: 3px; background-color: #FFFFFF; border-radius: 2px 2px 0 0; opacity: var(--line-opacity); }
+      
+#tab-balance, #tab-send {
+    cursor: pointer;
+}
+        .swipe-container { display: flex; flex: 1; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; background-color: #FFFFFF; }
+        .swipe-container::-webkit-scrollbar { display: none; }
+        .swipe-page { min-width: 100%; width: 100%; flex-shrink: 0; scroll-snap-align: start; overflow-y: auto; padding: 10px 20px; display: flex; flex-direction: column; }
+
         .top-info-bar { width: 100%; display: flex; justify-content: space-between; align-items: flex-start; padding: 2px 0 15px 0; }
         .hash-text { font-size: 10px; color: #999999; font-family: 'Roboto', sans-serif; margin-left: -15px; margin-top: -2px; }
         
@@ -98,22 +260,24 @@
         .balance-display { width: 100%; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 45px; transition: margin-bottom 0.3s ease; }
         .balance-wrapper { position: relative; display: inline-block; text-align: center; top: -5px; left: -5px; }
 
-        .balance-wrapper .crypto-value { font-family: 'Varela Round', sans-serif; font-size: 54px; font-weight: 300; color: #111111; line-height: 1; letter-spacing: 1px; }
-        .balance-wrapper .fiat-value { position: absolute; left: -2px; top: -22px; font-family: 'Roboto', sans-serif; font-size: 16px; font-weight: 500; white-space: nowrap; }
-        .balance-wrapper .fiat-value .fiat-num { color: #111111; font-family: 'Varela Round', sans-serif; } 
-        .balance-wrapper .fiat-value .fiat-curr { color: #999999; font-weight: 350; } 
+        .balance-wrapper .crypto-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 54px; font-weight: 500; color: #111111; line-height: 1; letter-spacing: -0.5px; }
+        .balance-wrapper .fiat-value { position: absolute; left: -2px; top: -22px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 500; white-space: nowrap; }
+        .balance-wrapper .fiat-value .fiat-num { color: #111111; font-family: 'Plus Jakarta Sans', sans-serif; } 
+        .balance-wrapper .fiat-value .fiat-curr { color: #999999; font-weight: 350; font-family: 'Roboto', sans-serif; } 
         .balance-wrapper .symbol { position: absolute; right: 0px; bottom: -35px; font-family: 'Roboto', sans-serif; font-size: 26px; font-weight: 350; color: #999999; }
 
         .balance-display.compact { margin-bottom: 40px; }
-        .balance-display.compact .crypto-value { font-size: 46px; letter-spacing: 0.5px; }
+        .balance-display.compact .crypto-value { font-size: 46px; letter-spacing: 0px; }
         .balance-display.compact .fiat-value { font-size: 13px; top: -19px; }
         .balance-display.compact .symbol { font-size: 18px; bottom: -19px; }
 
         .empty-state-text { font-family: 'Roboto', sans-serif; font-size: 22px; color: #BDBDBD; text-align: center; margin-top: 20px; font-weight: 400; }
 
         .history-list { margin-left: -20px; margin-right: -20px; padding: 0 10px; display: none; flex-direction: column; gap: 20px; margin-top: 10px; }
-        .history-item { display: flex; align-items: center; gap: 10px; padding-bottom: 5px; cursor: pointer;}
-        .history-icon { width: 38px; height: 38px; border-radius: 50%; display: flex; justify-content: center; align-items: center; flex-shrink: 0;}
+        .history-item { display: flex; align-items: center; gap: 10px; padding-bottom: 15px; cursor: pointer; user-select: none; border-bottom: 1px solid #F0F0F0; }
+        .history-item:last-child { border-bottom: none; }
+        
+        .history-icon { width: 40px; height: 38px; border-radius: 50%; display: flex; justify-content: center; align-items: center; flex-shrink: 0;}
         .history-icon.in { background-color: #00B999; } 
         .history-icon.out { background-color: #A785D1; }
         
@@ -122,13 +286,12 @@
         .history-address { font-size: 13px; color: #333333; word-break: normal; overflow-wrap: break-word; line-height: 1.3; padding-right: 50px; }
         .history-bottom-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: -3px; }
         
-        .history-amount { font-family: 'Roboto', sans-serif; font-size: 16px; font-weight: 500; }
+        .history-amount { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 500; }
         .history-amount.in { color: #00B999; } 
         .history-amount.out { color: #A785D1; }
         
-        .history-right { font-size: 11px; color: #555555; padding-right: 0; }
+        .history-right { font-size: 11px; color: #555555; padding-right: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
-        /* ==================== Send Tab ==================== */
         .input-container { position: relative; margin-bottom: 25px; padding-top: 15px; }
         .input-line-wrapper { display: flex; align-items: flex-end; border-bottom: 1px solid #CCCCCC; padding-bottom: 2px; position: relative; transition: border-color 0.2s ease, border-width 0.2s ease; margin-left: -5px; margin-right: -5px; }
         .input-line-wrapper:focus-within { border-bottom: 2px solid #3171E1; }
@@ -153,65 +316,27 @@
         .amount-line-wrapper { border-bottom: 1px solid #CCCCCC; padding-bottom: 2px; transition: border-color 0.2s ease, border-width 0.2s ease; margin-left: -5px; margin-right: -5px; }
         .amount-line-wrapper:focus-within { border-bottom: 2px solid #3171E1; }
         
-        .amount-input { width: 100%; border: none; outline: none; font-family: 'Varela Round', sans-serif; font-weight: 400; font-size: 24px; color: #333; background: transparent; caret-color: #3171E1; padding: 0; line-height: 1.1; text-align: left; padding-left: 5px; padding-right: 5px; }
+        .amount-input { width: 100%; border: none; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; font-size: 24px; color: #333; background: transparent; caret-color: #3171E1; padding: 0; line-height: 1.1; text-align: left; padding-left: 5px; padding-right: 5px; }
         .amount-input::placeholder { color: #BDBDBD; font-weight: 400; }
 
         .amount-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1px; width: 100%; padding-left: 5px; padding-right: 5px; }
         .max-text { font-family: 'Roboto', sans-serif; font-size: 11px; font-weight: 500; color: #3171E1; cursor: pointer; line-height: 1; margin-left: -8px; position: relative; top: 1px; }
         .currency-large { font-family: 'Roboto', sans-serif; font-size: 17px; color: #999999; font-weight: 400; line-height: 1; position: relative; top: 2px; }
 
-        .btn-send-continue { position: absolute; bottom: 20px; right: 10px; left: auto; background-color: #E0E0E0; color: #8C8C8C; border: none; padding: 0 16px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 20px; font-family: 'Roboto', sans-serif; font-size: 14px; font-weight: 500; letter-spacing: 1.5px; cursor: not-allowed; transition: all 0.3s ease; }
+        .btn-send-continue { position: absolute; bottom: 15px; right: 15px; left: auto; background-color: #E0E0E0; color: #8C8C8C; border: none; padding: 0 16px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 30px; font-family: 'Roboto', sans-serif; font-size: 14px; font-weight: 400; letter-spacing: 1.5px; cursor: not-allowed; transition: all 0.3s ease; }
         .btn-send-continue.active { background-color: #3171E1; color: #FFFFFF; cursor: pointer; }
 
-        /* ==================== Modals ==================== */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; }
         .modal.active { display: flex; }
         .modal-content { background: #fff; width: 90%; max-width: 400px; border-radius: 12px; padding: 20px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto;}
         .modal-close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #666; }
 
-        /* ==================== Fullscreen QR Scanner ==================== */
         #scanner-modal { background: #000; }
-        #scanner-modal .modal-content {
-            width: 100%;
-            max-width: 100%;
-            height: 100%;
-            max-height: 100%;
-            border-radius: 0;
-            padding: 0;
-            background: #000;
-            box-shadow: none;
-            overflow: hidden;
-            position: relative;
-        }
-        #scanner-modal .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            color: #fff;
-            font-size: 28px;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.5);
-            border-radius: 50%;
-            line-height: 1;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
+        #scanner-modal .modal-content { width: 100%; max-width: 100%; height: 100%; max-height: 100%; border-radius: 0; padding: 0; background: #000; box-shadow: none; overflow: hidden; position: relative; }
+        #scanner-modal .modal-close { position: absolute; top: 20px; right: 20px; z-index: 1000; color: #fff; font-size: 28px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); border-radius: 50%; line-height: 1; border: 1px solid rgba(255,255,255,0.3); }
         #scanner-modal h2 { display: none; }
-        #reader {
-            width: 100% !important;
-            height: 100% !important;
-            margin: 0 !important;
-            border-radius: 0 !important;
-        }
-        #reader video {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
-        }
+        #reader { width: 100% !important; height: 100% !important; margin: 0 !important; border-radius: 0 !important; }
+        #reader video { width: 100% !important; height: 100% !important; object-fit: cover !important; }
     </style>
 </head>
 <body>
@@ -220,7 +345,7 @@
         
         <div id="main-screen" class="screen active">
             <header class="main-header">
-                <button class="menu-btn">
+                <button class="menu-btn" onclick="openEditBalanceModal()">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
                         <line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
@@ -257,7 +382,7 @@
                 <div class="asset-list" id="asset-list-container"></div>
             </div>
             
-            <button class="fab" id="main-fab" onclick="openEditBalanceModal()">
+            <button class="fab" id="main-fab">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><line x1="12" y1="6" x2="12" y2="18"></line><line x1="6" y1="12" x2="18" y2="12"></line></svg>
             </button>
         </div>
@@ -266,7 +391,7 @@
             
             <header class="asset-header">
                 <div class="asset-top-nav">
-                    <button class="menu-btn" onclick="navigation.goBack()">
+                    <button class="menu-btn" onclick="openEditBalanceModal()">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
                             <line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line>
                         </svg>
@@ -274,15 +399,18 @@
                     
                     <div class="header-title">
                         <h1 id="asset-header-title">Bitcoin</h1>
-                        <p>Default Wallet</p>
+                        <p id="asset-header-subtitle">Default Wallet</p>
                     </div>
                     
                     <div class="header-right" id="header-actions">
-                        <button class="icon-btn">
+                        <button class="icon-btn search-icon">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="10.5" cy="10.5" r="5.5"></circle>
                                 <line x1="14.5" y1="14.5" x2="20" y2="20"></line>
                             </svg>
+                        </button>
+                        <button class="icon-btn trash-icon">
+                            <img src="icons/trash.png" alt="Delete" class="trash-icon-img">
                         </button>
                         <button class="icon-btn">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
@@ -292,81 +420,93 @@
                     </div>
                 </div>
 
-                <div class="tabs" id="header-tabs"></div>
+                <div class="tabs" id="header-tabs">
+                    <div class="tab" id="tab-receive">Receive</div>
+                    <div class="tab" id="tab-balance">Balance</div>
+                    <div class="tab" id="tab-send">Send</div>
+                </div>
             </header>
 
-            <div id="tab-balance" class="tab-content active">
-                <div class="top-info-bar">
-                    <span class="hash-text">H:972385</span>
-                    <div class="status-dot-top" id="net-status"></div>
-                </div>
-
-                <div class="balance-display" id="balance-display">
-                    <div class="balance-wrapper">
-                        <div class="fiat-value">
-                            <span class="fiat-num" id="balance-usd-num">0.00</span> <span class="fiat-curr">USD</span>
-                        </div>
-                        <div class="crypto-value" id="balance-crypto-num">0.00</div>
-                        <div class="symbol" id="balance-symbol">BTC</div>
+            <div class="swipe-container" id="swipe-container">
+                
+                <div class="swipe-page" id="page-balance">
+                    <div class="top-info-bar">
+                        <span class="hash-text">H:972385</span>
+                        <div class="status-dot-top" id="net-status"></div>
                     </div>
+
+                    <div class="balance-display" id="balance-display">
+                        <div class="balance-wrapper">
+                            <div class="fiat-value">
+                                <span class="fiat-num" id="balance-usd-num">0.00</span> <span class="fiat-curr">USD</span>
+                            </div>
+                            <div class="crypto-value" id="balance-crypto-num">0.00</div>
+                            <div class="symbol" id="balance-symbol">BTC</div>
+                        </div>
+                    </div>
+
+                    <div class="empty-state-text" id="empty-state-text">No coins received so far</div>
+
+                    <div class="history-list" id="asset-history-container"></div>
                 </div>
 
-                <div class="empty-state-text" id="empty-state-text">No coins received so far</div>
+                <div class="swipe-page" id="page-send">
+                    <div class="input-container">
+                        <div class="input-line-wrapper">
+                            <input type="text" id="send-address" class="to-input" placeholder=" ">
+                            <label for="send-address" class="to-label">To</label>
+                            
+                            <div class="action-icons" id="action-icons">
+                                <img src="icons/paste.jpg" alt="Paste" onclick="pasteAddress()">
+<img src="icons/qr.jpg" alt="QR" onclick="openScanner()">
+                            </div>
 
-                <div class="history-list" id="asset-history-container"></div>
+                            <div class="clear-btn" id="clear-btn" onclick="clearAddress()">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="address-hint" id="send-hint-text">Bitcoin address or alias</div>
+                    </div>
+
+                    <div class="amount-section">
+                        <span class="amount-label">Amount</span>
+                        <div class="amount-row" id="amount-row-container">
+                            <div class="amount-col" id="crypto-col">
+                                <div class="amount-line-wrapper">
+                                    <input type="text" inputmode="decimal" id="send-amount" class="amount-input" placeholder="0.00">
+                                </div>
+                                <div class="amount-footer">
+                                    <span class="max-text" onclick="setMaxAmount()">MAX</span>
+                                    <span class="currency-large" id="send-currency-crypto">BTC</span>
+                                </div>
+                            </div>
+
+                            <div class="amount-col" id="fiat-col">
+                                <div class="amount-line-wrapper">
+                                    <input type="text" inputmode="decimal" id="send-fiat" class="amount-input" placeholder="0.00">
+                                </div>
+                                <div class="amount-footer" style="justify-content: flex-end;">
+                                    <span class="currency-large">USD</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="advanced-setting-row" id="advanced-setting-row">
+                        <span class="advanced-setting-label">Advanced setting</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="advanced-toggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <button class="btn-send-continue" id="btn-send-continue" onclick="prepareSend()" disabled>CONTINUE</button>
+                </div>
             </div>
 
-            <div id="tab-send" class="tab-content">
-                <div class="input-container">
-                    <div class="input-line-wrapper">
-                        <input type="text" id="send-address" class="to-input" placeholder=" ">
-                        <label for="send-address" class="to-label">To</label>
-                        
-                        <div class="action-icons" id="action-icons">
-                            <img src="https://s6.uupload.ir/files/img_20261023_135146_xnnb.jpg" alt="Paste" onclick="pasteAddress()">
-                            <img src="https://s6.uupload.ir/files/img_20261023_135201_004r.jpg" alt="QR" onclick="openScanner()">
-                        </div>
-
-                        <div class="clear-btn" id="clear-btn" onclick="clearAddress()">
-                            <svg viewBox="0 0 24 24" fill="none">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="address-hint" id="send-hint-text">Bitcoin address or alias</div>
-                </div>
-
-                <div class="amount-section">
-                    <span class="amount-label">Amount</span>
-                    <div class="amount-row" id="amount-row-container">
-                        <div class="amount-col" id="crypto-col">
-                            <div class="amount-line-wrapper">
-                                <input type="text" inputmode="decimal" id="send-amount" class="amount-input" placeholder="0.00">
-                            </div>
-                            <div class="amount-footer">
-                                <span class="max-text" onclick="setMaxAmount()">MAX</span>
-                                <span class="currency-large" id="send-currency-crypto">BTC</span>
-                            </div>
-                        </div>
-
-                        <div class="amount-col" id="fiat-col">
-                            <div class="amount-line-wrapper">
-                                <input type="text" inputmode="decimal" id="send-fiat" class="amount-input" placeholder="0.00">
-                            </div>
-                            <div class="amount-footer" style="justify-content: flex-end;">
-                                <span class="currency-large">USD</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn-send-continue" id="btn-send-continue" onclick="prepareSend()" disabled>CONTINUE</button>
-            </div>
-
-            <button class="fab hidden" id="asset-fab" onclick="openEditBalanceModal()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><line x1="12" y1="6" x2="12" y2="18"></line><line x1="6" y1="12" x2="18" y2="12"></line></svg>
-            </button>
         </div>
 
         <div id="edit-balance-modal" class="modal">
@@ -421,6 +561,29 @@
             </div>
         </div>
 
+        <div id="edit-tx-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal('edit-tx-modal')">&times;</span>
+                <h2 style="margin-bottom:15px; font-size:18px; color:#3171E1;">Edit Transaction</h2>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" id="edit-tx-amount" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:16px;">
+                </div>
+                <div class="form-group" style="margin-top:10px;">
+                    <label>Address</label>
+                    <input type="text" id="edit-tx-address" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:14px;">
+                </div>
+                <div class="form-group" style="margin-top:10px;">
+                    <label>Date & Time</label>
+                    <input type="datetime-local" id="edit-tx-time" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:14px;">
+                </div>
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button class="btn-send-continue" onclick="updateTransaction()" style="position:static; flex:1; background:#3171E1; color:white;">Update</button>
+                    <button class="btn-send-continue" onclick="deleteTransaction()" style="position:static; flex:1; background:#E53935; color:white;">Delete</button>
+                </div>
+            </div>
+        </div>
+
         <div id="confirm-send-modal" class="modal">
             <div class="modal-content">
                 <span class="modal-close" onclick="closeModal('confirm-send-modal')">&times;</span>
@@ -447,12 +610,12 @@
 
     <script>
         const ICONS = {
-            btc: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNGNzkzMUEiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMjMuMTg5IDE0LjAyYy4zMTQtMi4wOTYtMS4yODMtMy4yMjMtMy40NjUtMy45NzVsLjcwOC0yLjg0LTEuNzI4LS40My0uNjkgMi43NjVjLS40NTQtLjExNC0uOTItLjIyLTEuMzg1LS4zMjZsLjY5NS0yLjc4M0wxNS41OTYgNmwtLjcwOCAyLjgzOWMtLjM3Ni0uMDg2LS43NDYtLjE3LTEuMTA0LS4yNmwuMDAyLS4wMDktMi4zODQtLjU5NS0uNDYgMS44NDZzMS4yODMuMjk0IDEuMjU2LjMxMmMuNy4xNzUuODI2LjYzOC44MDUgMS4wMDZsLS44MDYgMy4yMzVjLjA0OC4wMTIuMTEuMDMuMTguMDU3bC0uMTgzLS4wNDUtMS4xMyA0LjUzMmMtLjA4Ni4yMTItLjMwMy41MzEtLjc5My40MS4wMTguMDI1LTEuMjU2LS4zMTMtMS4yNTYtLjMxM2wtLjg1OCAxLjk3OCAyLjI1LjU2MWMuNDE4LjEwNS44MjguMjE1IDEuMjMxLjMxOGwtLjcxNSAyLjg3MiAxLjcyNy40My43MDgtMi44NGMuNDcyLjEyNy45My4yNDUgMS4zNzguMzU3bC0uNzA2IDIuODI4IDEuNzI4LjQzLjcxNS0yLjg2NmMyLjk0OC41NTggNS4xNjQuMzMzIDYuMDk3LTIuMzMzLjc1Mi0yLjE0Ni0uMDM3LTMuMzg1LTEuNTg4LTQuMTkyIDEuMTMtLjI2IDEuOTgtMS4wMDMgMi4yMDctMi41Mzh6bS0zLjk1IDUuNTM4Yy0uNTMzIDIuMTQ3LTQuMTQ4Ljk4Ni01LjMyLjY5NWwuOTUtMy44MDVjMS4xNzIuMjkzIDQuOTI5Ljg3MiA0LjM3IDMuMTF6bS41MzUtNS41NjljLS40ODcgMS45NTMtMy40OTUuOTYtNC40Ny43MTdsLjg2LTMuNDVjLjk3NS4yNDMgNC4xMTguNjk2IDMuNjEgMi43MzN6Ii8+PC9zdmc+",
-            eth: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iIzYyN0VFQSIvPjxwYXRoIGZpbGw9IiNGRkYiIGZpbGwtb3BhY2l0eT0iLjYwMiIgZD0iTTE2LjQ5OCA0djguODdMMjQgMTYuNTc3eiIvPjxwYXRoIGZpbGw9IiNGRkYiIGQ9Ik0xNi40OTggNHY4Ljg3TDkgMTYuNTc3eiIvPjxwYXRoIGZpbGw9IiNGRkYiIGZpbGwtb3BhY2l0eT0iLjYwMiIgZD0iTTE2LjQ5OCAyMS45Njh2Ni4wMjRMMjQgMTcuNjE2eiIvPjxwYXRoIGZpbGw9IiNGRkYiIGQ9Ik0xNi40OTggMjcuOTkydi02LjAyNEw5IDE3LjYxNnoiLz48cGF0aCBmaWxsPSIjRkZGIiBmaWxsLW9wYWNpdHk9Ii4yIiBkPSJNMTYuNDk4IDE5Ljk3NEwyNCAxNS41NDJsLTcuNTAyLTMuNDF6Ii8+PHBhdGggZmlsbD0iI0ZGRiIgZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNOSAxNS41NDJsNy40OTggNC40MzJ2LTcuODQyeiIvPjwvZz48L3N2Zz4=",
-            usdt: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiMyNkExN0IiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMTcuOTIyIDE3LjM4M3YtLjAwMmMtLjExLjAwOC0uNjc3LjA0Mi0xLjk0Mi4wNDItMS4wMSAwLTEuNzIxLS4wMy0xLjk3MS0uMDQydi4wMDNjLTMuODg4LS4xNzEtNi43OS0uODQ4LTYuNzktMS42NTggMC0uODA5IDIuOTAyLTEuNDg2IDYuNzktMS42NnYyLjY0NGMuMjU0LjAxOC45ODIuMDYxIDEuOTg4LjA2MSAxLjIwNyAwIDEuODEyLS4wNSAxLjkyNS0uMDZ2LTIuNjQzYzMuODguMTczIDYuNzc1Ljg1IDYuNzc1IDEuNjU4IDAgLjgxLTIuODk1IDEuNDg1LTYuNzc1IDEuNjU3bTAtMy41OXYtMi4zNjZoNS40MTRWNy44MTlIOC41OTV2My42MDhoNS40MTR2Mi4zNjVjLTQuNC4yMDItNy43MDkgMS4wNzQtNy43MDkgMi4xMTggMCAxLjA0NCAzLjMwOSAxLjkxNSA3LjcwOSAyLjExOHY3LjU4MmgzLjkxM3YtNy41ODRjNC4zOTMtLjIwMiA3LjY5NC0xLjA3MyA3LjY5NC0yLjExNiAwLTEuMDQzLTMuMzAxLTEuOTE0LTcuNjk0LTIuMTE3Ii8+PC9zdmc+",
-            trx: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNFNTA5MzYiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMjAuNjAzIDhMOCA5LjYybDMuNzAyIDMuMTNjMS40NCAxLjIyIDIuODk3IDIuNDE4IDQuMzIyIDMuNjQ4IDEuNTUzIDEuMzMgMy4wOCAyLjY3OCA0LjYxNSA0LjAyNS41NjMuNSAxLjExOCAxLjAxIDEuNjg2IDEuNTE2bDEuMDg2Ljk2OC4yNS0xLjMyYy40ODctMi40MiAxLjAzMi00LjgyOCAxLjU1LTcuMjQuNTMtMi40NTQgMS4wNjQtNC45MDcgMS41OS03LjM2My4xNy0uNzkyLS41NzItLjg1My0xLjI0LS44NDdsLS4yMzQuMDAyYy0uNzUuMDAyLTEuNS4wMTUtMi4yNDYuMDMtLjY0LjAxMy0xLjI4LjAyNi0xLjkyLjAwek0xOC4zMiA5LjgwMmMxLjM1LS4wMSAyLjcwMi0uMDQgNC4wNTQtLjA3LjI0LS4wMDQuNDgtLjAxLjcyMi0uMDE2bC00LjI0OCAxOS42LTQuODg2LTQuMjc2TDE4LjMyIDkuODAyeiIvPjwvc3ZnPg==",
-            bnb: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNGM0JBMkYiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMTIuMTE2IDEzLjQwNEwxNiA5LjUybDMuODg2IDMuODg2IDIuMjYtMi4yNkwxNiA1bC02LjE0NCA2LjE0NCAyLjI2IDIuMjZ6TTYgMTZsMi4yNi0yLjI2TDEwLjUyIDE2bC0yLjI2IDIuMjZMNyAxNnptNi4xMTYgMi41OTZMMTYgMjIuNDhsMy44ODYtMy44ODYgMi4yNiAyLjI2TDE2IDI3bC02LjE0NC02LjE0NCAyLjI2LTIuMjZ6bTkuNjI0LTIuNTk2bDIuMjYtMi4yNkwyNi4yNiAxNmwtMi4yNiAyLjI2TDIxLjc0IDE2ek0xNiAxOC41MkwxMy40OCAxNiAxNiAxMy40OCAxOC41MiAxNiAxNiAxOC41MnoiLz48L3N2Zz4="
-        };
+    btc: "icons/btc.png",
+    eth: "icons/eth.png",
+    usdt: "icons/usdt.png",
+    trx: "icons/trx.png",
+    bnb: "icons/bnb.png"
+};
 
         const DEFAULT_STATE = {
             assets: [
@@ -473,28 +636,33 @@
         let html5QrCode = null;
         let currentBtcPrice = 0;
         let isApiConnected = false;
+        let editingTxId = null;
+        let bscHeaderMode = 'balance';
 
         function saveState() { localStorage.setItem('coinomi_app_state', JSON.stringify(state)); }
 
-                const navigation = {
+        (function migrateState() {
+            if (!state.assets) return;
+            const bscAsset = state.assets.find(a => a.id === 'bsc_usd');
+            if (bscAsset && bscAsset.symbol !== 'BSC-USD') {
+                bscAsset.symbol = 'BSC-USD';
+                saveState();
+            }
+        })();
+
+        window.navigation = {
             showScreen: function(screenId) {
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
                 document.getElementById(screenId).classList.add('active');
                 
-                // به جاوا اطلاع می‌دهیم که در کدام صفحه هستیم
                 if (window.Android) {
-                    if (screenId === 'main-screen') {
-                        window.Android.setMainScreenActive();
-                    } else {
-                        window.Android.setAssetScreenActive();
-                    }
+                    if (screenId === 'main-screen') { window.Android.setMainScreenActive(); } 
+                    else { window.Android.setAssetScreenActive(); }
                 }
 
                 if (screenId === 'main-screen') {
                     document.getElementById('main-fab').classList.remove('hidden');
                     renderMainList();
-                } else {
-                    document.getElementById('main-fab').classList.add('hidden');
                 }
             },
             goBack: function() {
@@ -512,31 +680,35 @@
             state.assets.forEach(asset => {
                 const assetUsd = asset.balance * (asset.price || 0);
                 totalUsd += assetUsd;
-                const changeClass = asset.change > 0 ? 'positive' : (asset.change < 0 ? 'negative' : 'neutral');
-                const sign = asset.change > 0 ? '+' : '';
                 
                 let priceHtml = '';
                 if (!asset.noPrice) {
+                    const changeClass = asset.change > 0 ? 'positive' : (asset.change < 0 ? 'negative' : 'neutral');
+                    const sign = asset.change > 0 ? '+' : '';
                     priceHtml = `
                         <div class="price-info">
-                            <span>${asset.price > 0 ? asset.price.toLocaleString(undefined, {minimumFractionDigits: 2}) : '---'} USD</span>
+                            <span>${asset.price > 0 ? asset.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '---'} USD</span>
                             <span class="${changeClass}">${sign}${asset.change.toFixed(2)}%</span>
                         </div>`;
                 }
 
                 let dotClass = 'gray';
                 if (['btc', 'eth', 'trx', 'bnb'].includes(asset.id)) {
-                    dotClass = isApiConnected ? 'green' : 'red';
+                    dotClass = (isApiConnected && asset.price > 0) ? 'green' : 'red';
                 }
 
-                let isBSC = asset.id === 'bsc_usd';
-                let nameHtml = isBSC ? `Binance Bridged USDT<br>(BNB Smart Chain)` : asset.name;
-
-                let rightHtml = '';
+                const isBSC = asset.id === 'bsc_usd';
+                
+                const nameHtml = isBSC 
+                    ? `Binance Bridged<br><span class="line2">USDT (BNB Smart</span><br>Chain)` 
+                    : asset.name;
+                const nameClass = isBSC ? 'multi-line' : '';
+                
+                let rightHtml;
                 if (isBSC) {
                     rightHtml = `
-                        <div class="asset-right" style="padding-top: 0;">
-                            <div class="bsc-value">0.00 <span>BSC-USD</span></div>
+                        <div class="asset-right">
+                            <div class="usd-value">${asset.balance.toFixed(2)} <span>${asset.symbol}</span></div>
                         </div>
                     `;
                 } else {
@@ -556,7 +728,7 @@
                                 <div class="status-dot ${dotClass}"></div>
                             </div>
                             <div class="asset-info">
-                                <h3>${nameHtml}</h3>
+                                <h3 class="${nameClass}">${nameHtml}</h3>
                                 ${priceHtml}
                             </div>
                         </div>
@@ -569,66 +741,169 @@
             document.getElementById('total-balance-val').innerText = totalUsd.toFixed(2);
         }
 
-        async function fetchPrices() {
-            const loadingBar = document.getElementById('loading-bar');
-            if (!navigator.onLine) { 
-                isApiConnected = false;
-                renderMainList();
-                loadingBar.classList.add('loading'); 
-                return; 
-            }
-            loadingBar.classList.add('loading');
+        // ==================== سیستم دریافت قیمت ====================
+        function fetchWithTimeout(url, timeoutMs = 8000) {
+            return Promise.race([
+                fetch(url),
+                new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), timeoutMs))
+            ]);
+        }
 
+        async function fetchFromCoinGecko() {
             try {
-                const res = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbols=["BTCUSDT","ETHUSDT","TRXUSDT","BNBUSDT"]');
-                if (res.ok) {
-                    const data = await res.json();
-                    const priceMap = { 'BTCUSDT': 'btc', 'ETHUSDT': 'eth', 'TRXUSDT': 'trx', 'BNBUSDT': 'bnb' };
-                    data.forEach(item => {
-                        const assetId = priceMap[item.symbol];
-                        if (assetId) {
+                const res = await fetchWithTimeout('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tron,binancecoin&vs_currencies=usd&include_24hr_change=true');
+                if (!res.ok) return false;
+                const data = await res.json();
+                const mapping = { 'bitcoin': 'btc', 'ethereum': 'eth', 'tron': 'trx', 'binancecoin': 'bnb' };
+                let count = 0;
+                for (const [cgId, assetId] of Object.entries(mapping)) {
+                    const asset = state.assets.find(a => a.id === assetId);
+                    if (asset && data[cgId] && data[cgId].usd) {
+                        asset.price = data[cgId].usd;
+                        asset.change = data[cgId].usd_24h_change || 0;
+                        count++;
+                    }
+                }
+                return count > 0;
+            } catch (e) { return false; }
+        }
+
+        async function fetchFromCoinPaprika() {
+            try {
+                const ids = { btc: 'btc-bitcoin', eth: 'eth-ethereum', trx: 'trx-tron', bnb: 'bnb-binance-coin' };
+                let count = 0;
+                for (const [assetId, id] of Object.entries(ids)) {
+                    try {
+                        const res = await fetchWithTimeout(`https://api.coinpaprika.com/v1/tickers/${id}`);
+                        if (res.ok) {
+                            const data = await res.json();
                             const asset = state.assets.find(a => a.id === assetId);
-                            if (asset) {
-                                asset.price = parseFloat(item.lastPrice);
-                                asset.change = parseFloat(item.priceChangePercent);
+                            if (asset && data.quotes?.USD?.price) {
+                                asset.price = data.quotes.USD.price;
+                                asset.change = data.quotes.USD.percent_change_24h || 0;
+                                count++;
                             }
                         }
-                    });
-                    saveState();
-                    isApiConnected = true; 
-                } else {
-                    isApiConnected = false;
+                    } catch(e) {}
                 }
+                return count > 0;
+            } catch (e) { return false; }
+        }
 
-                if (document.getElementById('main-screen').classList.contains('active')) renderMainList();
-                if (currentAssetId) updateAssetView();
-                loadingBar.classList.remove('loading');
-            } catch (error) {
-                console.warn("Could not fetch prices.", error);
-                isApiConnected = false; 
-                renderMainList();
-                loadingBar.classList.remove('loading');
-            }
+        async function fetchFromGateIO() {
+            try {
+                const pairs = { btc: 'BTC_USDT', eth: 'ETH_USDT', trx: 'TRX_USDT', bnb: 'BNB_USDT' };
+                let count = 0;
+                for (const [assetId, pair] of Object.entries(pairs)) {
+                    try {
+                        const res = await fetchWithTimeout(`https://api.gateio.ws/api/v4/spot/tickers?currency_pair=${pair}`);
+                        if (res.ok) {
+                            const data = await res.json();
+                            const asset = state.assets.find(a => a.id === assetId);
+                            if (asset && data[0]?.last) {
+                                asset.price = parseFloat(data[0].last);
+                                asset.change = parseFloat(data[0].change_percentage) || 0;
+                                count++;
+                            }
+                        }
+                    } catch(e) {}
+                }
+                return count > 0;
+            } catch (e) { return false; }
+        }
+
+        async function fetchFromBybit() {
+            try {
+                const pairs = { btc: 'BTCUSDT', eth: 'ETHUSDT', trx: 'TRXUSDT', bnb: 'BNBUSDT' };
+                let count = 0;
+                for (const [assetId, pair] of Object.entries(pairs)) {
+                    try {
+                        const res = await fetchWithTimeout(`https://api.bybit.com/v5/market/tickers?category=spot&symbol=${pair}`);
+                        if (res.ok) {
+                            const data = await res.json();
+                            const ticker = data.result?.list?.[0];
+                            const asset = state.assets.find(a => a.id === assetId);
+                            if (asset && ticker?.lastPrice) {
+                                asset.price = parseFloat(ticker.lastPrice);
+                                asset.change = (parseFloat(ticker.price24hPcnt) || 0) * 100;
+                                count++;
+                            }
+                        }
+                    } catch(e) {}
+                }
+                return count > 0;
+            } catch (e) { return false; }
+        }
+
+        async function fetchPrices() {
+            const loadingBar = document.getElementById('loading-bar');
+            loadingBar.classList.add('loading');
+            
+            const results = await Promise.allSettled([
+                fetchFromCoinGecko(),
+                fetchFromCoinPaprika(),
+                fetchFromGateIO(),
+                fetchFromBybit()
+            ]);
+
+            const anySuccess = results.some(r => r.status === 'fulfilled' && r.value === true);
+            isApiConnected = anySuccess;
+
+            loadingBar.classList.remove('loading');
+            if (document.getElementById('main-screen').classList.contains('active')) renderMainList();
+            if (currentAssetId) updateAssetView();
+          updateNetworkStatus();
         }
 
         setInterval(fetchPrices, 60000);
-        window.addEventListener('offline', () => { isApiConnected = false; renderMainList(); document.getElementById('loading-bar').classList.add('loading'); });
-        window.addEventListener('online', () => fetchPrices());
+
+        function updateBscHeader(isSendMode) {
+            if (currentAssetId !== 'bsc_usd') return;
+            const h1 = document.getElementById('asset-header-title');
+            const p = document.getElementById('asset-header-subtitle');
+            const assetScreen = document.getElementById('asset-screen');
+
+            if (isSendMode && bscHeaderMode !== 'send') {
+                h1.innerText = 'Binance Bridged USDT (BNB Smart';
+                p.innerText = 'Chain) | BNB Smart Chain';
+                assetScreen.classList.add('bsc-send-mode');
+                bscHeaderMode = 'send';
+            } else if (!isSendMode && bscHeaderMode !== 'balance') {
+                h1.innerText = 'Binance Bridged USDT';
+                p.innerText = '(BNB Smart Chain) |';
+                assetScreen.classList.remove('bsc-send-mode');
+                bscHeaderMode = 'balance';
+            }
+        }
 
         function openAssetDetail(assetId) {
             currentAssetId = assetId;
             const asset = state.assets.find(a => a.id === assetId);
             
-            let headerTitle = asset.name;
-            if (asset.symbol === 'USDT') {
-                headerTitle = `Tether | ${asset.network === 'TRC20' ? 'Tron' : 'Ethereum'}`;
+            const assetScreen = document.getElementById('asset-screen');
+            assetScreen.classList.remove('bsc-mode', 'bsc-send-mode');
+            bscHeaderMode = 'balance';
+
+            if (asset.id === 'bsc_usd') {
+                assetScreen.classList.add('bsc-mode');
+                document.getElementById('asset-header-title').innerText = 'Binance Bridged USDT';
+                document.getElementById('asset-header-subtitle').innerText = '(BNB Smart Chain) |';
+                document.getElementById('send-hint-text').innerHTML = 'Binance Bridged USDT (BNB Smart Chain) address or<br>alias';
+            } else {
+                let headerTitle = asset.name;
+                if (asset.symbol === 'USDT') headerTitle = `Tether | ${asset.network === 'TRC20' ? 'Tron' : 'Ethereum'}`;
+                document.getElementById('asset-header-title').innerText = headerTitle;
+                document.getElementById('asset-header-subtitle').innerText = 'Default Wallet';
+                document.getElementById('send-hint-text').innerText = `${asset.name} address or alias`;
             }
-            document.getElementById('asset-header-title').innerText = headerTitle;
             
             navigation.showScreen('asset-screen');
-            switchTab('balance');
+            
+            setTimeout(() => {
+                document.getElementById('page-balance').scrollIntoView({ behavior: 'instant', inline: 'start' });
+                updateTabs(0);
+            }, 10);
 
-            document.getElementById('send-hint-text').innerText = `${asset.name} address or alias`;
             document.getElementById('send-currency-crypto').innerText = asset.symbol;
             
             const fiatCol = document.getElementById('fiat-col');
@@ -657,33 +932,79 @@
             updateNetworkStatus();
         }
 
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
-            const tabsContainer = document.getElementById('header-tabs');
-            const headerActions = document.getElementById('header-actions');
-            const assetFab = document.getElementById('asset-fab');
-            let html = '';
-            
-            if (tabName === 'balance') {
-                document.getElementById('tab-balance').classList.add('active');
-                html = `
-                    <div class="tab tab-left" style="cursor: default;">Receive</div>
-                    <div class="tab tab-center active" onclick="switchTab('balance')">Balance</div>
-                    <div class="tab tab-right" onclick="switchTab('send')">Send</div>
-                `;
-                headerActions.style.visibility = 'visible';
-                assetFab.classList.remove('hidden'); 
-            } else if (tabName === 'send') {
-                document.getElementById('tab-send').classList.add('active');
-                html = `
-                    <div class="tab tab-left" onclick="switchTab('balance')">Balance</div>
-                    <div class="tab tab-center active" onclick="switchTab('send')">Send</div>
-                `;
-                headerActions.style.visibility = 'hidden';
-                assetFab.classList.add('hidden'); 
+        const swipeContainer = document.getElementById('swipe-container');
+        const tabRec = document.getElementById('tab-receive');
+        const tabBal = document.getElementById('tab-balance');
+        const tabSend = document.getElementById('tab-send');
+      tabBal.addEventListener('click', () => {
+    const pageBalance = document.getElementById('page-balance');
+    if (pageBalance) swipeContainer.scrollTo({ left: 0, behavior: 'smooth' });
+});
+
+tabSend.addEventListener('click', () => {
+    const pageSend = document.getElementById('page-send');
+    if (pageSend) swipeContainer.scrollTo({ left: swipeContainer.clientWidth, behavior: 'smooth' });
+});
+
+        swipeContainer.addEventListener('scroll', () => {
+            const maxScroll = swipeContainer.scrollWidth - swipeContainer.clientWidth;
+            if (maxScroll <= 0) return;
+            const p = swipeContainer.scrollLeft / maxScroll;
+            updateTabs(p);
+        });
+
+        function updateTabs(p) {
+            if (p < 0 || p > 1) return;
+            let balLeft, balTrans, sendLeft, sendTrans, recLeft, recOpacity, balLine, sendLine;
+
+            if (p <= 0.5) {
+                const pr = p * 2; 
+                balLeft = `calc(50% - (50% - 16px) * ${pr})`;
+                balTrans = `translateX(calc(-50% + 50% * ${pr}))`;
+                sendLeft = `calc(100% - 16px)`;
+                sendTrans = `translateX(-100%)`;
+                recLeft = `calc(16px - 50px * ${pr})`;
+                recOpacity = 0.6 - (0.6 * pr);
+                balLine = 1 - pr;
+                sendLine = 0;
+            } else {
+                const pr = (p - 0.5) * 2; 
+                balLeft = `16px`;
+                balTrans = `translateX(0)`;
+                sendLeft = `calc(100% - 16px - (50% - 16px) * ${pr})`;
+                sendTrans = `translateX(calc(-100% + 50% * ${pr}))`;
+                recLeft = `calc(16px - 50px)`;
+                recOpacity = 0;
+                balLine = 0;
+                sendLine = pr;
             }
-            tabsContainer.innerHTML = html;
+
+            tabBal.style.left = balLeft;
+            tabBal.style.transform = balTrans;
+            tabBal.style.setProperty('--line-opacity', balLine);
+            
+            tabSend.style.left = sendLeft;
+            tabSend.style.transform = sendTrans;
+            tabSend.style.setProperty('--line-opacity', sendLine);
+            
+            tabRec.style.left = recLeft;
+            tabRec.style.opacity = recOpacity;
+
+            if (p <= 0.5) {
+                tabBal.style.color = '#FFFFFF';
+                tabBal.style.fontWeight = '500';
+                tabSend.style.color = 'rgba(255, 255, 255, 0.6)';
+                tabSend.style.fontWeight = '400';
+            } else {
+                tabBal.style.color = 'rgba(255, 255, 255, 0.6)';
+                tabBal.style.fontWeight = '400';
+                tabSend.style.color = '#FFFFFF';
+                tabSend.style.fontWeight = '500';
+            }
+
+            if (currentAssetId === 'bsc_usd') {
+                updateBscHeader(p > 0.5);
+            }
         }
 
         function updateAssetView() {
@@ -715,7 +1036,6 @@
             let html = '';
             assetHist.forEach(tx => {
                 const isIn = tx.type === 'in';
-                
                 const now = Date.now();
                 const diffMs = now - tx.timestamp;
                 const diffMins = Math.floor(diffMs / 60000);
@@ -723,8 +1043,7 @@
                 let dateStr = '';
 
                 if (diffMs < 0) {
-                    const dateObj = new Date(tx.timestamp);
-                    dateStr = dateObj.toLocaleString('en-US', {month:'short', day:'numeric', year:'numeric'});
+                    dateStr = new Date(tx.timestamp).toLocaleString('en-US', {month:'short', day:'numeric', year:'numeric'});
                 } else if (diffMins < 1) {
                     dateStr = 'Just now';
                 } else if (diffMins < 60) {
@@ -732,8 +1051,7 @@
                 } else if (diffHours < 24) {
                     dateStr = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
                 } else {
-                    const dateObj = new Date(tx.timestamp);
-                    dateStr = dateObj.toLocaleString('en-US', {month:'short', day:'numeric', year:'numeric'});
+                    dateStr = new Date(tx.timestamp).toLocaleString('en-US', {month:'short', day:'numeric', year:'numeric'});
                 }
 
                 let amountStr = tx.amount.toFixed(8).replace(/\.?0+$/, "");
@@ -757,7 +1075,7 @@
                 }
 
                 html += `
-                    <div class="history-item" onclick="openReceipt('${tx.id}')">
+                    <div class="history-item" data-id="${tx.id}" onclick="openReceipt('${tx.id}')">
                         <div class="history-icon ${tx.type}">${iconSvg}</div>
                         <div class="history-details">
                             <div class="history-header">
@@ -774,6 +1092,80 @@
                 `;
             });
             histContainer.innerHTML = html;
+
+            document.querySelectorAll('.history-item').forEach(item => {
+                const txId = item.getAttribute('data-id');
+                let pressTimer;
+                const startPress = (e) => {
+                    pressTimer = setTimeout(() => { openEditTxModal(txId); }, 600);
+                };
+                const cancelPress = () => clearTimeout(pressTimer);
+                item.addEventListener('touchstart', startPress);
+                item.addEventListener('touchend', cancelPress);
+                item.addEventListener('touchmove', cancelPress);
+                item.addEventListener('mousedown', startPress);
+                item.addEventListener('mouseup', cancelPress);
+                item.addEventListener('mouseleave', cancelPress);
+            });
+        }
+
+        function openEditTxModal(txId) {
+            const tx = state.history.find(h => h.id === txId);
+            if(!tx) return;
+            editingTxId = txId;
+
+            document.getElementById('edit-tx-amount').value = tx.amount;
+            document.getElementById('edit-tx-address').value = tx.address;
+            
+            const dateObj = new Date(tx.timestamp);
+            dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset());
+            document.getElementById('edit-tx-time').value = dateObj.toISOString().slice(0,16);
+
+            document.getElementById('edit-tx-modal').classList.add('active');
+        }
+
+        function updateTransaction() {
+            if(!editingTxId) return;
+            const tx = state.history.find(h => h.id === editingTxId);
+            const asset = state.assets.find(a => a.id === tx.assetId);
+
+            const newAmount = parseFloat(document.getElementById('edit-tx-amount').value);
+            const newAddr = document.getElementById('edit-tx-address').value;
+            const newTime = new Date(document.getElementById('edit-tx-time').value).getTime();
+
+            if(isNaN(newAmount) || !newAddr) return alert('Invalid data');
+
+            if (tx.type === 'in') {
+                asset.balance = asset.balance - tx.amount + newAmount;
+            } else {
+                asset.balance = asset.balance + tx.amount - newAmount;
+            }
+
+            tx.amount = newAmount;
+            tx.address = newAddr;
+            tx.timestamp = newTime;
+
+            saveState();
+            closeModal('edit-tx-modal');
+            updateAssetView();
+            renderMainList();
+        }
+
+        function deleteTransaction() {
+            if(!editingTxId) return;
+            const txIndex = state.history.findIndex(h => h.id === editingTxId);
+            if(txIndex === -1) return;
+            const tx = state.history[txIndex];
+            const asset = state.assets.find(a => a.id === tx.assetId);
+
+            if (tx.type === 'in') { asset.balance -= tx.amount; } else { asset.balance += tx.amount; }
+
+            state.history.splice(txIndex, 1);
+            saveState();
+            closeModal('edit-tx-modal');
+            updateAssetView();
+            renderMainList();
+            editingTxId = null;
         }
 
         const sendAmountInput = document.getElementById('send-amount');
@@ -789,9 +1181,7 @@
             } else {
                 if (!isNaN(cryptoAmount) && currentBtcPrice > 0) {
                     sendFiatInput.value = (cryptoAmount * currentBtcPrice).toFixed(2);
-                } else {
-                    sendFiatInput.value = '';
-                }
+                } else { sendFiatInput.value = ''; }
             }
             checkButtonState();
         });
@@ -805,9 +1195,7 @@
             } else {
                 if (!isNaN(fiatAmount) && currentBtcPrice > 0) {
                     sendAmountInput.value = (fiatAmount / currentBtcPrice).toFixed(8);
-                } else {
-                    sendAmountInput.value = '';
-                }
+                } else { sendAmountInput.value = ''; }
             }
             checkButtonState();
         });
@@ -853,27 +1241,26 @@
         }
 
         async function pasteAddress() {
-    try {
-        // تلاش برای استفاده از API استاندارد وب
-        const text = await navigator.clipboard.readText();
-        if (text) {
-            addrInput.value = text.trim();
-            addrInput.dispatchEvent(new Event('input'));
-            return;
-        }
-    } catch (err) {
-        // اگر API وب مسدود بود، از پل جاوا استفاده کن
-        if (window.Android && window.Android.getClipboardText) {
-            const nativeText = window.Android.getClipboardText();
-            if (nativeText) {
-                addrInput.value = nativeText.trim();
-                addrInput.dispatchEvent(new Event('input'));
-                return;
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text) {
+                    addrInput.value = text.trim();
+                    addrInput.dispatchEvent(new Event('input'));
+                    return;
+                }
+            } catch (err) {
+                if (window.Android && window.Android.getClipboardText) {
+                    const nativeText = window.Android.getClipboardText();
+                    if (nativeText) {
+                        addrInput.value = nativeText.trim();
+                        addrInput.dispatchEvent(new Event('input'));
+                        return;
+                    }
+                }
+                alert('دسترسی به حافظه امکان‌پذیر نیست.');
             }
         }
-        alert('دسترسی به حافظه امکان‌پذیر نیست. لطفاً به صورت دستی پیست کنید.');
-    }
-}
+
         function prepareSend() {
             const address = document.getElementById('send-address').value.trim();
             const amount = parseFloat(document.getElementById('send-amount').value);
@@ -919,43 +1306,34 @@
             openReceipt(tx.id);
         }
 
-        // ==================== Fullscreen QR Scanner ====================
         function openScanner() {
-    document.getElementById('scanner-modal').classList.add('active');
-    
-    setTimeout(() => {
-        if (html5QrCode) {
-            html5QrCode.stop().then(() => {
-                document.getElementById('reader').innerHTML = '';
-                startCamera();
-            }).catch(() => {
-                document.getElementById('reader').innerHTML = '';
-                startCamera();
-            });
-        } else {
-            startCamera();
-        }
-    }, 300);
+            document.getElementById('scanner-modal').classList.add('active');
+            setTimeout(() => {
+                if (html5QrCode) {
+                    html5QrCode.stop().then(() => {
+                        document.getElementById('reader').innerHTML = '';
+                        startCamera();
+                    }).catch(() => {
+                        document.getElementById('reader').innerHTML = '';
+                        startCamera();
+                    });
+                } else { startCamera(); }
+            }, 300);
 
-    function startCamera() {
-        html5QrCode = new Html5Qrcode("reader");
-        const config = { 
-            fps: 10, 
-            qrbox: { width: 250, height: 250 }
-            // تنظیمات advanced و aspectRatio حذف شدند تا با تمام گوشی‌ها سازگار باشد
-        };
-        
-        html5QrCode.start({ facingMode: "environment" }, config, (decodedText) => {
-            addrInput.value = decodedText;
-            addrInput.dispatchEvent(new Event('input'));
-            closeScanner();
-        }).catch(err => {
-            console.warn("Camera error:", err);
-            alert("خطا در باز کردن دوربین: " + err);
-            closeScanner();
-        });
-    }
-}
+            function startCamera() {
+                html5QrCode = new Html5Qrcode("reader");
+                const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+                html5QrCode.start({ facingMode: "environment" }, config, (decodedText) => {
+                    addrInput.value = decodedText;
+                    addrInput.dispatchEvent(new Event('input'));
+                    closeScanner();
+                }).catch(err => {
+                    alert("خطا در باز کردن دوربین: " + err);
+                    closeScanner();
+                });
+            }
+        }
+
         function closeScanner() {
             if (html5QrCode) {
                 html5QrCode.stop().then(() => {
@@ -965,12 +1343,9 @@
                     document.getElementById('scanner-modal').classList.remove('active');
                     document.getElementById('reader').innerHTML = '';
                 });
-            } else {
-                document.getElementById('scanner-modal').classList.remove('active');
-            }
+            } else { document.getElementById('scanner-modal').classList.remove('active'); }
         }
 
-        // ==================== Manage Balance ====================
         function generateRandomAddress(network) {
             const charsHex = '0123456789abcdef';
             const charsTron = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
@@ -1097,7 +1472,7 @@
                 <span class="modal-close" onclick="closeModal('receipt-modal')">&times;</span>
                 <h2 style="color:${color}; margin-bottom:15px;">${isIn ? 'Incoming' : 'Outgoing'} Transaction</h2>
                 <p style="margin-bottom:8px;"><strong>Asset:</strong> ${asset.name}</p>
-                <p style="margin-bottom:8px;"><strong>Amount:</strong> <span style="color:${color}; font-weight:bold; font-family:'Roboto';">${isIn?'+':'-'}${tx.amount.toFixed(8)} ${asset.symbol}</span></p>
+                <p style="margin-bottom:8px;"><strong>Amount:</strong> <span style="color:${color}; font-weight:bold; font-family:'Plus Jakarta Sans';">${isIn?'+':'-'}${tx.amount.toFixed(8)} ${asset.symbol}</span></p>
                 <p style="margin-bottom:8px;"><strong>Address:</strong> <br><span style="word-break:break-all; font-size:12px; color:#666;">${tx.address}</span></p>
                 <p style="margin-bottom:8px;"><strong>Date:</strong> ${new Date(tx.timestamp).toLocaleString()}</p>
                 <p style="margin-bottom:8px;"><strong>Status:</strong> <span style="background:#eee; padding:2px 6px; border-radius:4px; font-size:12px;">Simulated</span></p>
@@ -1108,16 +1483,29 @@
 
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        function updateNetworkStatus() {
-            const dot = document.getElementById('net-status');
-            if (navigator.onLine) {
-                dot.classList.add('online');
-            } else {
-                dot.classList.remove('online');
-            }
-        }
+        async function checkRealOnline() {
+    try {
+        const res = await Promise.race([
+            fetch('https://www.gstatic.com/generate_204', { method: 'HEAD', cache: 'no-store', mode: 'no-cors' }),
+            new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 3000))
+        ]);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+async function updateNetworkStatus() {
+    const dot = document.getElementById('net-status');
+    let isOnline = navigator.onLine;
+    if (!isOnline) {
+        isOnline = await checkRealOnline();
+    }
+    if (isOnline) { dot.classList.add('online'); } else { dot.classList.remove('online'); }
+}
         window.addEventListener('online', updateNetworkStatus);
         window.addEventListener('offline', updateNetworkStatus);
+      setInterval(updateNetworkStatus, 15000);
 
         renderMainList();
         fetchPrices();
