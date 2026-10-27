@@ -110,7 +110,7 @@ public class QrScannerActivity extends AppCompatActivity {
     
     @Override
     protected void onDestroy() {
-        super.destroy();
+        super.onDestroy();
         cameraExecutor.shutdown();
         scanner.close();
     }
