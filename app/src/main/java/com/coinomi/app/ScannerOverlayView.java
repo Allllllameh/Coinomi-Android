@@ -33,7 +33,7 @@ public class ScannerOverlayView extends View {
         int height = getHeight();
         
         // اندازه مربع اسکن (۶۰ درصد عرض صفحه)
-        boxSize = width * 0.6f;
+        boxSize = width * 0.8f;
         float left = (width - boxSize) / 2;
         float top = (height - boxSize) / 2;
         float right = left + boxSize;
