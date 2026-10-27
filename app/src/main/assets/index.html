@@ -19,6 +19,15 @@
         .screen { display: none; flex-direction: column; width: 100%; height: 100%; position: absolute; top: 0; left: 0; background-color: #FFFFFF; }
         .screen.active { display: flex; }
 
+        /* ==================== Splash Screen ==================== */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #3171E1; display: flex; align-items: center; justify-content: center;
+            z-index: 99999; transition: opacity 0.4s ease;
+        }
+        #splash-screen img { max-width: 60%; max-height: 60%; object-fit: contain; }
+        #splash-screen.fade-out { opacity: 0; pointer-events: none; }
+
         /* ==================== Main Screen ==================== */
         #main-screen { z-index: 5; }
         .main-header { position: relative; width: 100%; height: 80px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; background-color: #3171E1; z-index: 1; flex-shrink: 0; }
@@ -56,16 +65,8 @@
 
         .asset-info h3 { font-family: 'Roboto', sans-serif; font-size: 18px; font-weight: 450; color: #000000; line-height: 1.05; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; margin-bottom: 0px; letter-spacing: 0.2px; }
         
-        .asset-info h3.multi-line {
-            white-space: normal;
-            line-height: 1.15;
-            max-width: 180px;
-        }
-        
-        .asset-info h3.multi-line .line2 {
-            letter-spacing: -0.5px;
-            display: inline-block;
-        }
+        .asset-info h3.multi-line { white-space: normal; line-height: 1.15; max-width: 180px; }
+        .asset-info h3.multi-line .line2 { letter-spacing: -0.5px; display: inline-block; }
         
         .asset-info .price-info { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 400; color: #888888; display: flex; gap: 5px; margin-top: 0px; }
         .positive { color: #2EAD32; } .negative { color: #E53935; } .neutral { color: #888888; }
@@ -88,178 +89,63 @@
         .asset-top-nav .header-title p { font-size: 11px; color: rgba(255, 255, 255, 0.7); margin-top: 3px; }
 
         /* ==================== BSC-USDT Custom Header ==================== */
-        .trash-icon-img {
-            width: 24px;
-            height: 24px;
-            object-fit: contain;
-            display: block;
-        }
-
+        .trash-icon-img { width: 24px; height: 24px; object-fit: contain; display: block; }
         .icon-btn.trash-icon { display: none; }
-
         #asset-screen.bsc-mode .icon-btn.search-icon { display: none; }
         #asset-screen.bsc-mode .icon-btn.trash-icon { display: flex; }
-
-        #asset-screen.bsc-mode .header-right {
-            gap: 20px;
-            transform: none;
-            position: static;
-            right: auto;
-        }
+        #asset-screen.bsc-mode .header-right { gap: 20px; transform: none; position: static; right: auto; }
 
         #asset-screen.bsc-mode .asset-top-nav .header-title {
-            left: 52px;
-            top: calc(50% + 4px);
-            transform: translateY(-50%);
-            margin: 0;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: center;
+            left: 52px; top: calc(50% + 4px); transform: translateY(-50%); margin: 0; text-align: left;
+            display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
         }
 
         #asset-screen.bsc-mode .asset-top-nav .header-title h1 {
-            font-family: 'Lato', sans-serif;
-            font-size: 18px;
-            font-weight: 400;
-            color: #FFFFFF;
-            margin: 0;
-            line-height: 1.2;
-            white-space: nowrap;
-            letter-spacing: 0.3px;
+            font-family: 'Lato', sans-serif; font-size: 18px; font-weight: 400; color: #FFFFFF; margin: 0;
+            line-height: 1.2; white-space: nowrap; letter-spacing: 0.3px;
         }
 
         #asset-screen.bsc-mode .asset-top-nav .header-title p {
-            font-family: 'Lato', sans-serif;
-            font-size: 18px;
-            font-weight: 400;
-            color: #FFFFFF;
-            margin: 0;
-            line-height: 1.2;
-            white-space: nowrap;
-            letter-spacing: 0.3px;
-            margin-top: 9px;
+            font-family: 'Lato', sans-serif; font-size: 18px; font-weight: 400; color: #FFFFFF; margin: 0;
+            line-height: 1.2; white-space: nowrap; letter-spacing: 0.3px; margin-top: 9px;
         }
 
-        #asset-screen.bsc-mode.bsc-send-mode .asset-top-nav .header-title h1 {
-            letter-spacing: 0.7px;
-        }
+        #asset-screen.bsc-mode.bsc-send-mode .asset-top-nav .header-title h1 { letter-spacing: 0.7px; }
+        #asset-screen.bsc-mode.bsc-send-mode .header-right { display: none !important; }
+        #asset-screen.bsc-mode #page-send { padding: 20px; }
+        #asset-screen.bsc-mode #page-send .amount-footer { margin-top: 5px; }
+        #asset-screen.bsc-mode #page-send .currency-large { right: -12px; }
 
-        #asset-screen.bsc-mode.bsc-send-mode .header-right {
-            display: none !important;
-        }
+        #asset-screen.bsc-mode #send-hint-text { font-size: 13px; line-height: 1.5; letter-spacing: 0.2px; width: 100%; }
 
-        #asset-screen.bsc-mode #page-send {
-            padding: 20px;
-        }
+        /* Advanced setting toggle */
+        .advanced-setting-row { display: none; align-items: center; justify-content: flex-end; gap: 20px; margin-top: 38px; padding-right: 5px; }
+        #asset-screen.bsc-mode .advanced-setting-row { display: flex; }
+        .advanced-setting-label { font-size: 12px; color: #666666; font-family: 'Roboto', sans-serif; }
 
-        #asset-screen.bsc-mode #page-send .amount-footer {
-            margin-top: 5px;
-        }
-
-        #asset-screen.bsc-mode #page-send .currency-large {
-            right: -12px;
-        }
-
-        /* BSC hint: دو خط تضمین‌شده - خط 1 nowrap */
-#asset-screen.bsc-mode #send-hint-text {
-    font-size: 13px;
-    line-height: 1.5;
-    letter-spacing: 0.2px;
-    width: 100%;
-}
-
-        /* Advanced setting toggle - فقط در BSC mode */
-        .advanced-setting-row {
-    display: none;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 20px;
-    margin-top: 38px;
-    padding-right: 5px;
-}
-
-        #asset-screen.bsc-mode .advanced-setting-row {
-            display: flex;
-        }
-
-        .advanced-setting-label {
-            font-size: 12px;
-            color: #666666;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        /* Toggle: بدنه نازک‌تر - دایره بزرگ‌تر */
-        .toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 30px;
-    height: 12px;
-    flex-shrink: 0;
-}
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #A8A8A8;
-            transition: .3s;
-            border-radius: 12px;
-        }
-
-        .toggle-slider:before {
-    position: absolute;
-    content: "";
-    height: 22px;
-    width: 22px;
-    left: -4px;
-    top: -5px;
-    background-color: #EEEEEE;
-    transition: .3s;
-    border-radius: 50%;
-    box-shadow: 0 1px 2px rgba(168, 168, 168, 0.6);
-}
-
-        .toggle-switch input:checked + .toggle-slider {
-            background-color: #BFD4F5;
-        }
-
-        .toggle-switch input:checked + .toggle-slider:before {
-    background-color: #2E6FD9;
-    transform: translateX(20px);
-    box-shadow: 0 1px 2px rgba(111, 163, 234, 0.6);
-}
+        .toggle-switch { position: relative; display: inline-block; width: 30px; height: 12px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #A8A8A8; transition: .3s; border-radius: 12px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: -4px; top: -5px; background-color: #EEEEEE; transition: .3s; border-radius: 50%; box-shadow: 0 1px 2px rgba(168, 168, 168, 0.6); }
+        .toggle-switch input:checked + .toggle-slider { background-color: #BFD4F5; }
+        .toggle-switch input:checked + .toggle-slider:before { background-color: #2E6FD9; transform: translateX(16px); box-shadow: 0 1px 2px rgba(111, 163, 234, 0.6); }
 
         .tabs { display: flex; width: 100%; height: 30px; position: relative; overflow: hidden; }
         .tab { position: absolute; top: 0; height: 100%; display: flex; justify-content: center; align-items: center; font-size: 15px; color: rgba(255, 255, 255, 0.6); transition: color 0.1s linear, font-weight 0.1s linear; font-weight: 400; cursor: default; --line-opacity: 0; white-space: nowrap; }
         .tab::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 68px; height: 3px; background-color: #FFFFFF; border-radius: 2px 2px 0 0; opacity: var(--line-opacity); }
-      
-#tab-balance, #tab-send {
-    cursor: pointer;
-}
+        #tab-balance, #tab-send { cursor: pointer; }
+
         .swipe-container { display: flex; flex: 1; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; background-color: #FFFFFF; }
         .swipe-container::-webkit-scrollbar { display: none; }
         .swipe-page { min-width: 100%; width: 100%; flex-shrink: 0; scroll-snap-align: start; overflow-y: auto; padding: 10px 20px; display: flex; flex-direction: column; }
 
         .top-info-bar { width: 100%; display: flex; justify-content: space-between; align-items: flex-start; padding: 2px 0 15px 0; }
         .hash-text { font-size: 10px; color: #999999; font-family: 'Roboto', sans-serif; margin-left: -15px; margin-top: -2px; }
-        
         .status-dot-top { width: 9px; height: 9px; background-color: #E53935; border-radius: 50%; margin-right: -14px; margin-top: -4px; transition: background-color 0.3s ease; }
         .status-dot-top.online { background-color: #00B999; } 
 
         .balance-display { width: 100%; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 45px; transition: margin-bottom 0.3s ease; }
         .balance-wrapper { position: relative; display: inline-block; text-align: center; top: -5px; left: -5px; }
-
         .balance-wrapper .crypto-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 54px; font-weight: 500; color: #111111; line-height: 1; letter-spacing: -0.5px; }
         .balance-wrapper .fiat-value { position: absolute; left: -2px; top: -22px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 500; white-space: nowrap; }
         .balance-wrapper .fiat-value .fiat-num { color: #111111; font-family: 'Plus Jakarta Sans', sans-serif; } 
@@ -276,7 +162,6 @@
         .history-list { margin-left: -20px; margin-right: -20px; padding: 0 10px; display: none; flex-direction: column; gap: 20px; margin-top: 10px; }
         .history-item { display: flex; align-items: center; gap: 10px; padding-bottom: 15px; cursor: pointer; user-select: none; border-bottom: 1px solid #F0F0F0; }
         .history-item:last-child { border-bottom: none; }
-        
         .history-icon { width: 40px; height: 38px; border-radius: 50%; display: flex; justify-content: center; align-items: center; flex-shrink: 0;}
         .history-icon.in { background-color: #00B999; } 
         .history-icon.out { background-color: #A785D1; }
@@ -285,17 +170,14 @@
         .history-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #555555; padding-right: 0; }
         .history-address { font-size: 13px; color: #333333; word-break: normal; overflow-wrap: break-word; line-height: 1.3; padding-right: 50px; }
         .history-bottom-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: -3px; }
-        
         .history-amount { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 500; }
         .history-amount.in { color: #00B999; } 
         .history-amount.out { color: #A785D1; }
-        
         .history-right { font-size: 11px; color: #555555; padding-right: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         .input-container { position: relative; margin-bottom: 25px; padding-top: 15px; }
         .input-line-wrapper { display: flex; align-items: flex-end; border-bottom: 1px solid #CCCCCC; padding-bottom: 2px; position: relative; transition: border-color 0.2s ease, border-width 0.2s ease; margin-left: -5px; margin-right: -5px; }
         .input-line-wrapper:focus-within { border-bottom: 2px solid #3171E1; }
-        
         .to-label { position: absolute; left: 2px; top: 0px; font-size: 16px; color: #999999; transition: all 0.2s ease; pointer-events: none; }
         .to-input { flex: 1; border: none; outline: none; font-size: 16px; color: #333; background: transparent; padding-bottom: 2px; z-index: 1; caret-color: #3171E1; padding-left: 2px; }
         .to-input:focus ~ .to-label, .to-input:not(:placeholder-shown) ~ .to-label { top: -15px; font-size: 12px; color: #3171E1; }
@@ -304,18 +186,14 @@
         .action-icons img { width: 19px; height: 19px; object-fit: contain; cursor: pointer; }
         .clear-btn { display: none; width: 22px; height: 22px; background-color: #757575; border-radius: 50%; justify-content: center; align-items: center; cursor: pointer; margin-bottom: 2px; margin-left: auto; z-index: 2; margin-right: 5px; }
         .clear-btn svg { width: 14px; height: 14px; stroke: white; stroke-width: 3.5; stroke-linecap: round; }
-        
         .address-hint { font-size: 12px; color: #999999; margin-top: 10px; margin-left: -3px; }
 
         .amount-section { margin-top: -5px; }
         .amount-label { font-size: 11px; color: #999999; margin-bottom: 4px; display: block; margin-top: 8px; margin-left: -3px; }
-        
         .amount-row { display: flex; justify-content: space-between; gap: 14px; width: 100%; }
         .amount-col { width: 50%; display: flex; flex-direction: column; }
-        
         .amount-line-wrapper { border-bottom: 1px solid #CCCCCC; padding-bottom: 2px; transition: border-color 0.2s ease, border-width 0.2s ease; margin-left: -5px; margin-right: -5px; }
         .amount-line-wrapper:focus-within { border-bottom: 2px solid #3171E1; }
-        
         .amount-input { width: 100%; border: none; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; font-size: 24px; color: #333; background: transparent; caret-color: #3171E1; padding: 0; line-height: 1.1; text-align: left; padding-left: 5px; padding-right: 5px; }
         .amount-input::placeholder { color: #BDBDBD; font-weight: 400; }
 
@@ -323,7 +201,7 @@
         .max-text { font-family: 'Roboto', sans-serif; font-size: 11px; font-weight: 500; color: #3171E1; cursor: pointer; line-height: 1; margin-left: -8px; position: relative; top: 1px; }
         .currency-large { font-family: 'Roboto', sans-serif; font-size: 17px; color: #999999; font-weight: 400; line-height: 1; position: relative; top: 2px; }
 
-        .btn-send-continue { position: absolute; bottom: 15px; right: 15px; left: auto; background-color: #E0E0E0; color: #8C8C8C; border: none; padding: 0 16px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 30px; font-family: 'Roboto', sans-serif; font-size: 14px; font-weight: 400; letter-spacing: 1.5px; cursor: not-allowed; transition: all 0.3s ease; }
+        .btn-send-continue { position: absolute; bottom: 15px; right: 15px; left: auto; background-color: #E0E0E0; color: #8C8C8C; border: none; padding: 0 16px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 30px; font-family: 'Roboto', sans-serif; font-size: 14px; font-weight: 400; letter-spacing: 1.5px; cursor: not-allowed; transition: all 0.3s ease; }
         .btn-send-continue.active { background-color: #3171E1; color: #FFFFFF; cursor: pointer; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; }
@@ -331,18 +209,47 @@
         .modal-content { background: #fff; width: 90%; max-width: 400px; border-radius: 12px; padding: 20px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto;}
         .modal-close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #666; }
 
+        /* ==================== Scanner Modal ==================== */
         #scanner-modal { background: #000; }
         #scanner-modal .modal-content { width: 100%; max-width: 100%; height: 100%; max-height: 100%; border-radius: 0; padding: 0; background: #000; box-shadow: none; overflow: hidden; position: relative; }
-        #scanner-modal .modal-close { position: absolute; top: 20px; right: 20px; z-index: 1000; color: #fff; font-size: 28px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); border-radius: 50%; line-height: 1; border: 1px solid rgba(255,255,255,0.3); }
-        #scanner-modal h2 { display: none; }
         #reader { width: 100% !important; height: 100% !important; margin: 0 !important; border-radius: 0 !important; }
         #reader video { width: 100% !important; height: 100% !important; object-fit: cover !important; }
+        #reader__dashboard { display: none !important; }
+
+        /* استایل گوشه‌های نازک اسکنر */
+        #qr-shaded-region > div {
+            border: none !important; border-radius: 0 !important;
+            background:
+                linear-gradient(to right, #FFF 100%, transparent 0) top left / 40px 2px no-repeat,
+                linear-gradient(to bottom, #FFF 100%, transparent 0) top left / 2px 40px no-repeat,
+                linear-gradient(to left, #FFF 100%, transparent 0) top right / 40px 2px no-repeat,
+                linear-gradient(to bottom, #FFF 100%, transparent 0) top right / 2px 40px no-repeat,
+                linear-gradient(to right, #FFF 100%, transparent 0) bottom left / 40px 2px no-repeat,
+                linear-gradient(to top, #FFF 100%, transparent 0) bottom left / 2px 40px no-repeat,
+                linear-gradient(to left, #FFF 100%, transparent 0) bottom right / 40px 2px no-repeat,
+                linear-gradient(to top, #FFF 100%, transparent 0) bottom right / 2px 40px no-repeat !important;
+            box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.85) !important;
+        }
+
+        /* دکمه فلش اسکنر */
+        .scanner-flash-btn {
+            position: absolute; top: 25px; right: 25px; z-index: 1000;
+            background: transparent; border: none; padding: 0;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .scanner-flash-btn img { width: 32px; height: 32px; object-fit: contain; }
     </style>
 </head>
 <body>
 
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <img src="splash.png" alt="Loading...">
+    </div>
+
     <div id="app">
         
+        <!-- Main Screen -->
         <div id="main-screen" class="screen active">
             <header class="main-header">
                 <button class="menu-btn" onclick="openEditBalanceModal()">
@@ -382,11 +289,12 @@
                 <div class="asset-list" id="asset-list-container"></div>
             </div>
             
-            <button class="fab" id="main-fab">
+            <button class="fab" id="main-fab" onclick="openEditBalanceModal()">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><line x1="12" y1="6" x2="12" y2="18"></line><line x1="6" y1="12" x2="18" y2="12"></line></svg>
             </button>
         </div>
 
+        <!-- Asset Screen -->
         <div id="asset-screen" class="screen">
             
             <header class="asset-header">
@@ -428,7 +336,7 @@
             </header>
 
             <div class="swipe-container" id="swipe-container">
-                
+                <!-- Balance Page -->
                 <div class="swipe-page" id="page-balance">
                     <div class="top-info-bar">
                         <span class="hash-text">H:972385</span>
@@ -450,6 +358,7 @@
                     <div class="history-list" id="asset-history-container"></div>
                 </div>
 
+                <!-- Send Page -->
                 <div class="swipe-page" id="page-send">
                     <div class="input-container">
                         <div class="input-line-wrapper">
@@ -457,8 +366,8 @@
                             <label for="send-address" class="to-label">To</label>
                             
                             <div class="action-icons" id="action-icons">
-                                <img src="icons/paste.jpg" alt="Paste" onclick="pasteAddress()">
-<img src="icons/qr.jpg" alt="QR" onclick="openScanner()">
+                                <img src="icons/paste.png" alt="Paste" onclick="pasteAddress()">
+                                <img src="icons/qr.png" alt="QR" onclick="openScanner()">
                             </div>
 
                             <div class="clear-btn" id="clear-btn" onclick="clearAddress()">
@@ -506,9 +415,9 @@
                     <button class="btn-send-continue" id="btn-send-continue" onclick="prepareSend()" disabled>CONTINUE</button>
                 </div>
             </div>
-
         </div>
 
+        <!-- Modals -->
         <div id="edit-balance-modal" class="modal">
             <div class="modal-content">
                 <span class="modal-close" onclick="closeModal('edit-balance-modal')">&times;</span>
@@ -598,7 +507,9 @@
 
         <div id="scanner-modal" class="modal">
             <div class="modal-content">
-                <span class="modal-close" onclick="closeScanner()">&times;</span>
+                <button class="scanner-flash-btn" id="scanner-flash-btn" type="button">
+                    <img src="flash.png" alt="Flash">
+                </button>
                 <div id="reader"></div>
             </div>
         </div>
@@ -609,13 +520,24 @@
     </div>
 
     <script>
+        // Splash Screen Logic
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.classList.add('fade-out');
+                    setTimeout(() => splash.remove(), 500);
+                }
+            }, 1200);
+        });
+
         const ICONS = {
-    btc: "icons/btc.png",
-    eth: "icons/eth.png",
-    usdt: "icons/usdt.png",
-    trx: "icons/trx.png",
-    bnb: "icons/bnb.png"
-};
+            btc: "icons/btc.png",
+            eth: "icons/eth.png",
+            usdt: "icons/usdt.png",
+            trx: "icons/trx.png",
+            bnb: "icons/bnb.png"
+        };
 
         const DEFAULT_STATE = {
             assets: [
@@ -638,6 +560,7 @@
         let isApiConnected = false;
         let editingTxId = null;
         let bscHeaderMode = 'balance';
+        let qrScannerRunning = false;
 
         function saveState() { localStorage.setItem('coinomi_app_state', JSON.stringify(state)); }
 
@@ -650,7 +573,7 @@
             }
         })();
 
-        window.navigation = {
+        const navigation = {
             showScreen: function(screenId) {
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
                 document.getElementById(screenId).classList.add('active');
@@ -672,6 +595,10 @@
             }
         };
 
+        // ... (بقیه توابع renderMainList, fetchPrices و ... دقیقا مثل قبل اینجا قرار می‌گیرند)
+        // برای کوتاه شدن پاسخ، این بخش را از کد قبلی خودت کپی کن.
+        // من فقط توابع اسکنر را در ادامه آپدیت کرده‌ام.
+        
         function renderMainList() {
             const container = document.getElementById('asset-list-container');
             let totalUsd = 0;
@@ -698,7 +625,6 @@
                 }
 
                 const isBSC = asset.id === 'bsc_usd';
-                
                 const nameHtml = isBSC 
                     ? `Binance Bridged<br><span class="line2">USDT (BNB Smart</span><br>Chain)` 
                     : asset.name;
@@ -741,7 +667,6 @@
             document.getElementById('total-balance-val').innerText = totalUsd.toFixed(2);
         }
 
-        // ==================== سیستم دریافت قیمت ====================
         function fetchWithTimeout(url, timeoutMs = 8000) {
             return Promise.race([
                 fetch(url),
@@ -852,7 +777,7 @@
             loadingBar.classList.remove('loading');
             if (document.getElementById('main-screen').classList.contains('active')) renderMainList();
             if (currentAssetId) updateAssetView();
-          updateNetworkStatus();
+            updateNetworkStatus();
         }
 
         setInterval(fetchPrices, 60000);
@@ -936,15 +861,16 @@
         const tabRec = document.getElementById('tab-receive');
         const tabBal = document.getElementById('tab-balance');
         const tabSend = document.getElementById('tab-send');
-      tabBal.addEventListener('click', () => {
-    const pageBalance = document.getElementById('page-balance');
-    if (pageBalance) swipeContainer.scrollTo({ left: 0, behavior: 'smooth' });
-});
 
-tabSend.addEventListener('click', () => {
-    const pageSend = document.getElementById('page-send');
-    if (pageSend) swipeContainer.scrollTo({ left: swipeContainer.clientWidth, behavior: 'smooth' });
-});
+        tabBal.addEventListener('click', () => {
+            const pageBalance = document.getElementById('page-balance');
+            if (pageBalance) swipeContainer.scrollTo({ left: 0, behavior: 'smooth' });
+        });
+
+        tabSend.addEventListener('click', () => {
+            const pageSend = document.getElementById('page-send');
+            if (pageSend) swipeContainer.scrollTo({ left: swipeContainer.clientWidth, behavior: 'smooth' });
+        });
 
         swipeContainer.addEventListener('scroll', () => {
             const maxScroll = swipeContainer.scrollWidth - swipeContainer.clientWidth;
@@ -1096,9 +1022,7 @@ tabSend.addEventListener('click', () => {
             document.querySelectorAll('.history-item').forEach(item => {
                 const txId = item.getAttribute('data-id');
                 let pressTimer;
-                const startPress = (e) => {
-                    pressTimer = setTimeout(() => { openEditTxModal(txId); }, 600);
-                };
+                const startPress = (e) => { pressTimer = setTimeout(() => { openEditTxModal(txId); }, 600); };
                 const cancelPress = () => clearTimeout(pressTimer);
                 item.addEventListener('touchstart', startPress);
                 item.addEventListener('touchend', cancelPress);
@@ -1113,14 +1037,11 @@ tabSend.addEventListener('click', () => {
             const tx = state.history.find(h => h.id === txId);
             if(!tx) return;
             editingTxId = txId;
-
             document.getElementById('edit-tx-amount').value = tx.amount;
             document.getElementById('edit-tx-address').value = tx.address;
-            
             const dateObj = new Date(tx.timestamp);
             dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset());
             document.getElementById('edit-tx-time').value = dateObj.toISOString().slice(0,16);
-
             document.getElementById('edit-tx-modal').classList.add('active');
         }
 
@@ -1128,18 +1049,13 @@ tabSend.addEventListener('click', () => {
             if(!editingTxId) return;
             const tx = state.history.find(h => h.id === editingTxId);
             const asset = state.assets.find(a => a.id === tx.assetId);
-
             const newAmount = parseFloat(document.getElementById('edit-tx-amount').value);
             const newAddr = document.getElementById('edit-tx-address').value;
             const newTime = new Date(document.getElementById('edit-tx-time').value).getTime();
-
             if(isNaN(newAmount) || !newAddr) return alert('Invalid data');
 
-            if (tx.type === 'in') {
-                asset.balance = asset.balance - tx.amount + newAmount;
-            } else {
-                asset.balance = asset.balance + tx.amount - newAmount;
-            }
+            if (tx.type === 'in') { asset.balance = asset.balance - tx.amount + newAmount; } 
+            else { asset.balance = asset.balance + tx.amount - newAmount; }
 
             tx.amount = newAmount;
             tx.address = newAddr;
@@ -1157,9 +1073,7 @@ tabSend.addEventListener('click', () => {
             if(txIndex === -1) return;
             const tx = state.history[txIndex];
             const asset = state.assets.find(a => a.id === tx.assetId);
-
             if (tx.type === 'in') { asset.balance -= tx.amount; } else { asset.balance += tx.amount; }
-
             state.history.splice(txIndex, 1);
             saveState();
             closeModal('edit-tx-modal');
@@ -1175,7 +1089,6 @@ tabSend.addEventListener('click', () => {
         sendAmountInput.addEventListener('input', function() {
             const cryptoAmount = parseFloat(this.value);
             const asset = state.assets.find(a => a.id === currentAssetId);
-            
             if (asset.symbol === 'USDT' || asset.symbol === 'BSC-USD') {
                 if (!isNaN(cryptoAmount)) sendFiatInput.value = cryptoAmount.toFixed(2);
             } else {
@@ -1189,7 +1102,6 @@ tabSend.addEventListener('click', () => {
         sendFiatInput.addEventListener('input', function() {
             const fiatAmount = parseFloat(this.value);
             const asset = state.assets.find(a => a.id === currentAssetId);
-            
             if (asset.symbol === 'USDT' || asset.symbol === 'BSC-USD') {
                 if (!isNaN(fiatAmount)) sendAmountInput.value = fiatAmount.toFixed(2);
             } else {
@@ -1212,7 +1124,6 @@ tabSend.addEventListener('click', () => {
         function checkButtonState() {
             const addr = document.getElementById('send-address').value.trim();
             const amount = parseFloat(sendAmountInput.value);
-            
             if (addr.length > 0 && !isNaN(amount) && amount > 0) {
                 btn.classList.add('active'); btn.disabled = false;
             } else {
@@ -1265,7 +1176,6 @@ tabSend.addEventListener('click', () => {
             const address = document.getElementById('send-address').value.trim();
             const amount = parseFloat(document.getElementById('send-amount').value);
             const asset = state.assets.find(a => a.id === currentAssetId);
-
             if (!address) return alert('Please enter a destination address.');
             if (isNaN(amount) || amount <= 0) return alert('Please enter a valid amount.');
             if (amount > asset.balance) return alert('Insufficient balance.');
@@ -1281,7 +1191,6 @@ tabSend.addEventListener('click', () => {
         function executeSend() {
             if (!tempSendData) return;
             const asset = state.assets.find(a => a.id === tempSendData.assetId);
-            
             asset.balance -= tempSendData.amount;
 
             const tx = {
@@ -1296,54 +1205,69 @@ tabSend.addEventListener('click', () => {
 
             saveState();
             closeModal('confirm-send-modal');
-            
             document.getElementById('send-address').value = '';
             document.getElementById('send-amount').value = '';
             checkButtonState(); 
-            
             tempSendData = null;
             updateAssetView();
             openReceipt(tx.id);
         }
 
-        function openScanner() {
+        // ==== توابع اسکنر QR (کاملا بازنویسی شده برای رفع باگ) ====
+        async function openScanner() {
+            if (qrScannerRunning) return;
+            
             document.getElementById('scanner-modal').classList.add('active');
-            setTimeout(() => {
-                if (html5QrCode) {
-                    html5QrCode.stop().then(() => {
-                        document.getElementById('reader').innerHTML = '';
-                        startCamera();
-                    }).catch(() => {
-                        document.getElementById('reader').innerHTML = '';
-                        startCamera();
-                    });
-                } else { startCamera(); }
-            }, 300);
-
-            function startCamera() {
+            document.getElementById('reader').innerHTML = '';
+            
+            if (window.Android && window.Android.setScannerActive) {
+                window.Android.setScannerActive(true);
+            }
+            
+            await new Promise(r => setTimeout(r, 400));
+            
+            try {
                 html5QrCode = new Html5Qrcode("reader");
-                const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-                html5QrCode.start({ facingMode: "environment" }, config, (decodedText) => {
-                    addrInput.value = decodedText;
-                    addrInput.dispatchEvent(new Event('input'));
-                    closeScanner();
-                }).catch(err => {
-                    alert("خطا در باز کردن دوربین: " + err);
-                    closeScanner();
-                });
+                await html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 15, qrbox: { width: 300, height: 300 } },
+                    (decodedText) => {
+                        addrInput.value = decodedText;
+                        addrInput.dispatchEvent(new Event('input'));
+                        closeScanner();
+                    }
+                );
+                qrScannerRunning = true;
+            } catch (err) {
+                console.error('Scanner error:', err);
+                await closeScanner();
+                alert("خطا در باز کردن دوربین: " + err);
             }
         }
 
-        function closeScanner() {
+        async function closeScanner() {
+            document.getElementById('scanner-modal').classList.remove('active');
+            
+            if (window.Android && window.Android.setScannerActive) {
+                window.Android.setScannerActive(false);
+            }
+            
             if (html5QrCode) {
-                html5QrCode.stop().then(() => {
-                    document.getElementById('scanner-modal').classList.remove('active');
-                    document.getElementById('reader').innerHTML = '';
-                }).catch(() => {
-                    document.getElementById('scanner-modal').classList.remove('active');
-                    document.getElementById('reader').innerHTML = '';
-                });
-            } else { document.getElementById('scanner-modal').classList.remove('active'); }
+                const instance = html5QrCode;
+                html5QrCode = null;
+                try {
+                    await Promise.race([
+                        instance.stop(),
+                        new Promise(r => setTimeout(r, 1500))
+                    ]);
+                } catch(e) { console.error('stop err:', e); }
+                try {
+                    instance.clear();
+                } catch(e) { console.error('clear err:', e); }
+            }
+            
+            qrScannerRunning = false;
+            document.getElementById('reader').innerHTML = '';
         }
 
         function generateRandomAddress(network) {
@@ -1484,28 +1408,29 @@ tabSend.addEventListener('click', () => {
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
         async function checkRealOnline() {
-    try {
-        const res = await Promise.race([
-            fetch('https://www.gstatic.com/generate_204', { method: 'HEAD', cache: 'no-store', mode: 'no-cors' }),
-            new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 3000))
-        ]);
-        return true;
-    } catch (e) {
-        return false;
-    }
-}
+            try {
+                const res = await Promise.race([
+                    fetch('https://www.gstatic.com/generate_204', { method: 'HEAD', cache: 'no-store', mode: 'no-cors' }),
+                    new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 3000))
+                ]);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
 
-async function updateNetworkStatus() {
-    const dot = document.getElementById('net-status');
-    let isOnline = navigator.onLine;
-    if (!isOnline) {
-        isOnline = await checkRealOnline();
-    }
-    if (isOnline) { dot.classList.add('online'); } else { dot.classList.remove('online'); }
-}
+        async function updateNetworkStatus() {
+            const dot = document.getElementById('net-status');
+            let isOnline = navigator.onLine;
+            if (!isOnline) {
+                isOnline = await checkRealOnline();
+            }
+            if (isOnline) { dot.classList.add('online'); } else { dot.classList.remove('online'); }
+        }
+        
         window.addEventListener('online', updateNetworkStatus);
         window.addEventListener('offline', updateNetworkStatus);
-      setInterval(updateNetworkStatus, 15000);
+        setInterval(updateNetworkStatus, 15000);
 
         renderMainList();
         fetchPrices();
