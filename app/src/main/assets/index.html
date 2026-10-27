@@ -349,6 +349,10 @@
             background: transparent; border: none; padding: 0; cursor: pointer;
         }
         .scanner-flash-btn img { width: 24px; height: 24px; object-fit: contain; }
+      /* نازک کردن حاشیه‌های سفید اسکنر */
+#qr-shaded-region > div {
+    border-width: 2px !important; 
+}
     </style>
 </head>
 <body>
@@ -1354,9 +1358,14 @@
             
             try {
                 html5QrCode = new Html5Qrcode("reader");
-                await html5QrCode.start(
-                    { facingMode: "environment" },
-                    { fps: 15, qrbox: { width: 280, height: 280 } },
+                html5QrCode = new Html5Qrcode("reader");
+await html5QrCode.start(
+    { 
+        facingMode: "environment",
+        width: { ideal: 1280 },  // درخواست کیفیت HD برای دوربین
+        height: { ideal: 720 }
+    },
+    { fps: 15, qrbox: { width: 320, height: 320 } }, // سایز رو بزرگتر کردم تا حاشیه‌ها کشیده‌تر بشن
                     (decodedText) => {
                         addrInput.value = decodedText;
                         addrInput.dispatchEvent(new Event('input'));
