@@ -1346,39 +1346,34 @@
         }
 
         async function openScanner() {
-            if (qrScannerRunning) return;
-            document.getElementById('scanner-modal').classList.add('active');
-            document.getElementById('reader').innerHTML = '';
-            
-            if (window.Android && window.Android.setScannerActive) {
-                window.Android.setScannerActive(true);
+    if (qrScannerRunning) return;
+    document.getElementById('scanner-modal').classList.add('active');
+    document.getElementById('reader').innerHTML = '';
+    
+    if (window.Android && window.Android.setScannerActive) {
+        window.Android.setScannerActive(true);
+    }
+    
+    await new Promise(r => setTimeout(r, 300));
+    
+    try {
+        html5QrCode = new Html5Qrcode("reader");
+        await html5QrCode.start(
+            { facingMode: "environment" }, 
+            { fps: 15, qrbox: { width: 320, height: 320 } },
+            (decodedText) => {
+                addrInput.value = decodedText;
+                addrInput.dispatchEvent(new Event('input'));
+                closeScanner();
             }
-            
-            await new Promise(r => setTimeout(r, 300));
-            
-            try {
-                html5QrCode = new Html5Qrcode("reader");
-                html5QrCode = new Html5Qrcode("reader");
-await html5QrCode.start(
-    { 
-        facingMode: "environment",
-        width: { ideal: 1280 },  // درخواست کیفیت HD برای دوربین
-        height: { ideal: 720 }
-    },
-    { fps: 15, qrbox: { width: 320, height: 320 } }, // سایز رو بزرگتر کردم تا حاشیه‌ها کشیده‌تر بشن
-                    (decodedText) => {
-                        addrInput.value = decodedText;
-                        addrInput.dispatchEvent(new Event('input'));
-                        closeScanner();
-                    }
-                );
-                qrScannerRunning = true;
-            } catch (err) {
-                console.error('Scanner error:', err);
-                await closeScanner();
-                alert("خطا در باز کردن دوربین: " + err);
-            }
-        }
+        );
+        qrScannerRunning = true;
+    } catch (err) {
+        console.error('Scanner error:', err);
+        await closeScanner();
+        alert("خطا در باز کردن دوربین: " + err);
+    }
+}
 
         async function closeScanner() {
             document.getElementById('scanner-modal').classList.remove('active');
