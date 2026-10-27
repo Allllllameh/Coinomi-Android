@@ -36,4 +36,6 @@ dependencies {
     
     // ML Kit برای خواندن QR
     implementation 'com.google.mlkit:barcode-scanning:17.2.0'
+        // ConstraintLayout
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
