@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         }
         
         webView = new WebView(this);
+                webView.setBackgroundColor(Color.TRANSPARENT);
         setContentView(webView);
 
         // درخواست دسترسی دوربین در همان ابتدا
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             String qrResult = data.getStringExtra("QR_RESULT");
             if (qrResult != null) {
                 // فرستادن کد اسکن شده به HTML
-                webView.post(() -> webView.evaluateJavascript("handleNativeQrResult('" + qrResult + "');", null));
+                webView.post(() -> webView.evaluateJavascript("handleNativeQrResult(" + JSONObject.quote(qrResult) + ");", null));
             }
         }
     }
