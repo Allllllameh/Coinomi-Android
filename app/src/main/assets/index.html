@@ -1345,35 +1345,21 @@
             openReceipt(tx.id);
         }
 
-        async function openScanner() {
-    if (qrScannerRunning) return;
-    document.getElementById('scanner-modal').classList.add('active');
-    document.getElementById('reader').innerHTML = '';
-    
-    if (window.Android && window.Android.setScannerActive) {
-        window.Android.setScannerActive(true);
-    }
-    
-    await new Promise(r => setTimeout(r, 300));
-    
-    try {
-        html5QrCode = new Html5Qrcode("reader");
-        await html5QrCode.start(
-            { facingMode: "environment" }, 
-            { fps: 15, qrbox: { width: 320, height: 320 } },
-            (decodedText) => {
-                addrInput.value = decodedText;
-                addrInput.dispatchEvent(new Event('input'));
-                closeScanner();
-            }
-        );
-        qrScannerRunning = true;
-    } catch (err) {
-        console.error('Scanner error:', err);
-        await closeScanner();
-        alert("خطا در باز کردن دوربین: " + err);
+        function openScanner() {
+    if (window.Android && window.Android.openNativeScanner) {
+        window.Android.openNativeScanner();
+    } else {
+        alert("شبیه‌ساز مرورگر از دوربین بومی پشتیبانی نمی‌کند.");
     }
 }
+
+// تابعی که از سمت جاوا برای دریافت نتیجه صدا زده میشه
+window.handleNativeQrResult = function(result) {
+    if (result) {
+        addrInput.value = result.trim();
+        addrInput.dispatchEvent(new Event('input'));
+    }
+};
 
         async function closeScanner() {
             document.getElementById('scanner-modal').classList.remove('active');
