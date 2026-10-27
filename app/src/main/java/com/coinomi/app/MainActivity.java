@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
     
-    // متغیری برای اینکه جاوا بداند الان در کدام صفحه هستیم
     private boolean isAssetActive = false; 
+    private boolean isScannerActive = false; // برای مدیریت اسکنر
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
             return "";
         }
 
-        // این دو تابع از طرف جاوااسکریپت صدا زده می‌شوند تا موقعیت را به جاوا بگویند
         @JavascriptInterface
         public void setMainScreenActive() { 
             isAssetActive = false; 
@@ -96,16 +95,20 @@ public class MainActivity extends AppCompatActivity {
         public void setAssetScreenActive() { 
             isAssetActive = true; 
         }
+
+        @JavascriptInterface
+        public void setScannerActive(boolean active) {
+            isScannerActive = active;
+        }
     }
 
-    // منطق جدید و بدون باگ برای دکمه برگشت
     @Override
     public void onBackPressed() {
-        if (isAssetActive) {
-            // اگر در صفحه جزئیات بودیم، به جاوااسکریپت می‌گوییم برو به صفحه اصلی
+        if (isScannerActive) {
+            webView.evaluateJavascript("closeScanner();", null);
+        } else if (isAssetActive) {
             webView.evaluateJavascript("navigation.showScreen('main-screen');", null);
         } else {
-            // اگر در صفحه اصلی بودیم، برنامه را ببند
             super.onBackPressed();
         }
     }
