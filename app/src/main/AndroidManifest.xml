@@ -10,24 +10,26 @@
         android:label="Coinomi"
         android:icon="@drawable/app_icon"
         android:supportsRtl="true"
-                <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/SplashTheme"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+        android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
-                <activity
-            android:name=".QrScannerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait" />
+        
+        <!-- صفحه اصلی برنامه -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:theme="@style/SplashTheme"
             android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- صفحه اسکنر بومی دوربین -->
+        <activity
+            android:name=".QrScannerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait" />
+
     </application>
 </manifest>
