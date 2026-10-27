@@ -19,5 +19,16 @@
         android:id="@+id/scannerOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
+    <!-- دکمه فلش -->
+    <ImageView
+        android:id="@+id/btnFlash"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:src="@drawable/flash"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Flash"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
