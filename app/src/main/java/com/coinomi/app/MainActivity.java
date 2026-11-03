@@ -96,6 +96,16 @@ public class MainActivity extends AppCompatActivity {
             return "";
         }
 
+        // ✅ متد جدید برای نوشتن در کلیپ‌بورد (برای کپی خودکار بعد از اسکن QR)
+        @JavascriptInterface
+        public void setClipboardText(String text) {
+            ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+            if (clipboard != null) {
+                ClipData clip = ClipData.newPlainText("Copied", text);
+                clipboard.setPrimaryClip(clip);
+            }
+        }
+
         // مدیریت وضعیت صفحه‌ها
         @JavascriptInterface
         public void setMainScreenActive() { 
