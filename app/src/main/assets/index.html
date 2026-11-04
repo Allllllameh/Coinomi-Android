@@ -84,32 +84,24 @@
         .asset-header { background-color: #3171E1; display: flex; flex-direction: column; flex-shrink: 0; z-index: 10; height: 80px; position: relative;}
         .asset-top-nav { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; height: 50px; position: relative; }
         .asset-top-nav .menu-btn { transform: translateX(-3px); }
-        .asset-top-nav .header-title { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; }
-        .asset-top-nav .header-title h1 { font-family: 'Lato', sans-serif; font-size: 18px; font-weight: 500; color: #FFFFFF; margin-bottom: 2px; white-space: nowrap; }
-        .asset-top-nav .header-title p { font-size: 11px; color: rgba(255, 255, 255, 0.7); margin-top: 3px; }
+        
+        /* ✅ هدر استاندارد: همیشه وسط چین به جز در Receive (برای غیر بیت و اتریوم) */
+        .standard-header { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; display: flex; flex-direction: column; align-items: center; z-index: 10; width: max-content; max-width: 70%; }
+        .standard-header h1 { font-family: 'Lato', sans-serif; font-size: 18px; font-weight: 500; color: #FFFFFF; margin-bottom: 2px; white-space: nowrap; }
+        .standard-header p { font-size: 11px; color: rgba(255, 255, 255, 0.7); margin-top: 3px; }
 
-        /* ==================== BSC-USDT Custom Header ==================== */
-        .trash-icon-img { width: 24px; height: 24px; object-fit: contain; display: block; }
-        .icon-btn.trash-icon { display: none; }
-        #asset-screen.bsc-mode .icon-btn.search-icon { display: none; }
-        #asset-screen.bsc-mode .icon-btn.trash-icon { display: flex; }
+        /* ✅ در حالت Receive (به جز بیت و اتریوم و BSC) به چپ شیفت پیدا می‌کند */
+        #asset-screen.mode-receive:not(.btc-eth-mode):not(.bsc-mode) .standard-header {
+            left: 52px; transform: translateY(-50%); text-align: left; align-items: flex-start; max-width: calc(100% - 120px);
+        }
 
-        #asset-screen.bsc-mode .header-right { gap: 20px; transform: none; position: static; right: auto; }
-
+        /* ==================== BSC-USDT Custom Logic ==================== */
         #asset-screen.bsc-mode .asset-top-nav .header-title {
             left: 52px; top: calc(50% + 4px); transform: translateY(-50%); margin: 0; text-align: left;
             display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
         }
-
-        #asset-screen.bsc-mode .asset-top-nav .header-title h1 {
-            font-family: 'Lato', sans-serif; font-size: 18px; font-weight: 400; color: #FFFFFF; margin: 0;
-            line-height: 1.2; white-space: nowrap; letter-spacing: 0.3px;
-        }
-
-        #asset-screen.bsc-mode .asset-top-nav .header-title p {
-            font-family: 'Lato', sans-serif; font-size: 18px; font-weight: 400; color: #FFFFFF; margin: 0;
-            line-height: 1.2; white-space: nowrap; letter-spacing: 0.3px; margin-top: 9px;
-        }
+        #asset-screen.bsc-mode .asset-top-nav .header-title h1 { font-family: 'Lato', sans-serif; font-size: 18px; font-weight: 400; color: #FFFFFF; margin: 0; line-height: 1.2; white-space: nowrap; letter-spacing: 0.3px; }
+        #asset-screen.bsc-mode .asset-top-nav .header-title p { font-family: 'Lato', sans-serif; font-size: 18px; font-weight: 400; color: #FFFFFF; margin: 0; line-height: 1.2; white-space: nowrap; letter-spacing: 0.3px; margin-top: 9px; }
 
         #asset-screen.bsc-mode.bsc-send-mode .asset-top-nav .header-title h1 { letter-spacing: 0.7px; }
         #asset-screen.bsc-mode.bsc-send-mode .header-right { display: none !important; }
@@ -117,12 +109,136 @@
         #asset-screen.bsc-mode #page-send .amount-footer { margin-top: 5px; }
         #asset-screen.bsc-mode #page-send .currency-large { right: -12px; }
         #asset-screen.bsc-mode #send-hint-text { font-size: 13px; line-height: 1.5; letter-spacing: 0.2px; width: 100%; }
+        #asset-screen.bsc-mode #page-receive .amount-section { margin-bottom: 70px; }
+        #asset-screen.bsc-mode #page-receive .amount-row { justify-content: flex-start; gap: 0; }
 
-        /* Advanced setting toggle (BSC only) */
+        /* Header Icons Logic */
+        .header-sprite-img { height: 23px; width: auto; object-fit: contain; display: none; }
+        
+        .icon-btn.search-icon { display: none; }
+        .icon-btn.trash-icon { display: none; }
+        .icon-btn.dots-icon { display: none; }
+
+        /* Normal Assets */
+        #asset-screen:not(.bsc-mode).mode-receive .header-sprite-img { display: block; }
+        #asset-screen:not(.bsc-mode).mode-receive .icon-btn { display: none !important; }
+
+        #asset-screen:not(.bsc-mode).mode-balance .header-sprite-img { display: none; }
+        #asset-screen:not(.bsc-mode).mode-balance .icon-btn.search-icon { display: flex; }
+        #asset-screen:not(.bsc-mode).mode-balance .icon-btn.dots-icon { display: flex; }
+
+        #asset-screen:not(.bsc-mode).mode-send .header-sprite-img { display: none; }
+        #asset-screen:not(.bsc-mode).mode-send .icon-btn { display: none !important; }
+
+        /* BSC Assets */
+        #asset-screen.bsc-mode .header-right { gap: 20px; transform: translateY(-6px); position: absolute; right: 16px; }
+        
+        #asset-screen.bsc-mode.mode-receive .header-sprite-img { display: block; }
+        #asset-screen.bsc-mode.mode-receive .icon-btn { display: none !important; }
+
+        #asset-screen.bsc-mode.mode-balance .header-sprite-img { display: none; }
+        #asset-screen.bsc-mode.mode-balance .icon-btn.trash-icon { display: flex; }
+        #asset-screen.bsc-mode.mode-balance .icon-btn.dots-icon { display: flex; }
+
+        #asset-screen.bsc-mode.mode-send .header-sprite-img { display: none; }
+        #asset-screen.bsc-mode.mode-send .icon-btn { display: none !important; }
+
+        /* ==================== Tabs ==================== */
+        .tabs { display: flex; width: 100%; height: 30px; position: relative; overflow: hidden; }
+        .tab { position: absolute; top: 0; height: 100%; display: flex; justify-content: center; align-items: center; font-size: 15px; color: rgba(255, 255, 255, 0.6); transition: color 0.1s linear, font-weight 0.1s linear; font-weight: 400; cursor: pointer; --line-opacity: 0; white-space: nowrap; }
+        .tab::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 68px; height: 3px; background-color: #FFFFFF; border-radius: 2px 2px 0 0; opacity: var(--line-opacity); }
+      
+        .swipe-container { display: flex; flex: 1; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; background-color: #FFFFFF; }
+        .swipe-container::-webkit-scrollbar { display: none; }
+        .swipe-page { min-width: 100%; width: 100%; flex-shrink: 0; scroll-snap-align: start; overflow-y: auto; padding: 10px 20px 80px 20px; display: flex; flex-direction: column; position: relative; }
+
+        /* ==================== Receive Page ==================== */
+        #page-receive .my-address-label { font-size: 15px; color: #888; margin-top: 15px; margin-bottom: -4px; margin-left: -6px; position: relative; z-index: 2;}
+        #page-receive .my-address-text { font-family: 'Roboto', sans-serif; font-size: 17px; color: #000000; font-weight: 450; line-height: 1.9; letter-spacing: 0.5px; word-spacing: 0px; word-break: keep-all; margin-left: -6px; }
+        #page-receive .qr-wrapper { display: flex; justify-content: center; margin-top: 75px; margin-bottom: 10px; position: relative; }
+        #page-receive .qr-container { position: relative; width: 240px; height: 240px; background: #fff; padding: 10px; border-radius: 8px; }
+        #page-receive .qr-logo-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 54px; height: 54px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 5px rgba(0,0,0,0.1); z-index: 10; padding: 2px; }
+        
+        /* ✅ بزرگتر شدن لوگوها */
+        #page-receive .qr-logo-overlay img.usdt-logo { width: 100%; height: 100%; object-fit: contain; }
+        #page-receive .qr-logo-overlay img.other-logo { width: 85%; height: 85%; object-fit: contain; }
+        
+        #page-receive .uri-text { font-family: 'Roboto', sans-serif; font-size: 11px; color: #888; text-align: center; line-height: 1.4; margin-top: 0px; margin-bottom: 30px; word-break: break-all; padding: 0 10px; }
+        #page-receive .amount-section { margin-top: auto; padding-top: 20px; margin-bottom: 40px; }
+        #page-receive .amount-row { display: flex; justify-content: space-between; gap: 8px; width: 100%; }
+        #page-receive .amount-col { width: 50%; display: flex; flex-direction: column; }
+        #page-receive .amount-line-wrapper { border-bottom: 1px solid #888888; padding-bottom: 2px; margin-left: 0px; margin-right: 0px; }
+        #page-receive .amount-input { width: 100%; border: none; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 400; font-size: 15px; color: #333; background: transparent; padding: 0 0 0 2px; line-height: 1.2; text-align: left; }
+        #page-receive .amount-input::placeholder { color: #888888; font-weight: 400; }
+        #page-receive .amount-footer { display: flex; justify-content: flex-end; align-items: center; margin-top: 3px; width: 100%; padding-left: 0px; padding-right: 0px; }
+        #page-receive .currency-large { font-family: 'Roboto', sans-serif; font-size: 17px; color: #999999; font-weight: 400; line-height: 1; position: relative; top: 2px; }
+        #page-receive .fab-receive { position: absolute; bottom: 16px; right: 16px; width: 56px; height: 56px; border-radius: 50%; background-color: #3171E1; border: none; box-shadow: 0 4px 12px rgba(49, 113, 225, 0.4); cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 100; }
+        #page-receive .fab-receive img { width: 18px; height: 18px; object-fit: contain; }
+
+        /* ==================== Balance Page ==================== */
+        .top-info-bar { width: 100%; display: flex; justify-content: space-between; align-items: flex-start; padding: 2px 0 15px 0; }
+        .hash-text { font-size: 10px; color: #999999; font-family: 'Roboto', sans-serif; margin-left: -15px; margin-top: -2px; }
+        .status-dot-top { width: 9px; height: 9px; background-color: #E53935; border-radius: 50%; margin-right: -14px; margin-top: -4px; transition: background-color 0.3s ease; }
+        .status-dot-top.online { background-color: #00B999; } 
+        .balance-display { width: 100%; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 45px; transition: margin-bottom 0.3s ease; }
+        .balance-wrapper { position: relative; display: inline-block; text-align: center; top: -5px; left: -5px; }
+        .balance-wrapper .crypto-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 54px; font-weight: 500; color: #111111; line-height: 1; letter-spacing: -0.5px; }
+        .balance-wrapper .fiat-value { position: absolute; left: -2px; top: -22px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 500; white-space: nowrap; }
+        .balance-wrapper .fiat-value .fiat-num { color: #111111; font-family: 'Plus Jakarta Sans', sans-serif; } 
+        .balance-wrapper .fiat-value .fiat-curr { color: #999999; font-weight: 350; font-family: 'Roboto', sans-serif; } 
+        .balance-wrapper .symbol { position: absolute; right: 0px; bottom: -35px; font-family: 'Roboto', sans-serif; font-size: 26px; font-weight: 350; color: #999999; }
+        .balance-display.compact { margin-bottom: 40px; }
+        .balance-display.compact .crypto-value { font-size: 46px; letter-spacing: 0px; }
+        .balance-display.compact .fiat-value { font-size: 13px; top: -19px; }
+        .balance-display.compact .symbol { font-size: 18px; bottom: -19px; }
+        .empty-state-text { font-family: 'Roboto', sans-serif; font-size: 22px; color: #BDBDBD; text-align: center; margin-top: 20px; font-weight: 400; }
+        .history-list { margin-left: -20px; margin-right: -20px; padding: 0 10px; display: none; flex-direction: column; gap: 20px; margin-top: 10px; }
+        .history-item { display: flex; align-items: center; gap: 10px; padding-bottom: 15px; cursor: pointer; user-select: none; border-bottom: 1px solid #F0F0F0; }
+        .history-item:last-child { border-bottom: none; }
+        .history-icon { width: 40px; height: 38px; border-radius: 50%; display: flex; justify-content: center; align-items: center; flex-shrink: 0;}
+        .history-icon.in { background-color: #00B999; } 
+        .history-icon.out { background-color: #A785D1; }
+        .history-details { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #555555; padding-right: 0; }
+        .history-address { font-size: 13px; color: #333333; word-break: normal; overflow-wrap: break-word; line-height: 1.3; padding-right: 50px; }
+        .history-bottom-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: -3px; }
+        .history-amount { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 500; }
+        .history-amount.in { color: #00B999; } 
+        .history-amount.out { color: #A785D1; }
+        .history-right { font-size: 11px; color: #555555; padding-right: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        /* ==================== Send Page ==================== */
+        .input-container { position: relative; margin-bottom: 25px; padding-top: 15px; }
+        .input-line-wrapper { display: flex; align-items: flex-end; border-bottom: 1px solid #888888; padding-bottom: 2px; position: relative; transition: border-color 0.2s ease, border-width 0.2s ease; margin-left: -5px; margin-right: -5px; }
+        .input-line-wrapper:focus-within { border-bottom: 2px solid #3171E1; }
+        .to-label { position: absolute; left: 2px; top: 0px; font-size: 16px; color: #999999; transition: all 0.2s ease; pointer-events: none; }
+        .to-input { flex: 1; border: none; outline: none; font-size: 16px; color: #333; background: transparent; padding-bottom: 2px; z-index: 1; caret-color: #3171E1; padding-left: 2px; }
+        .to-input:focus ~ .to-label, .to-input:not(:placeholder-shown) ~ .to-label { top: -15px; font-size: 12px; color: #3171E1; }
+        .action-icons { display: flex; gap: 8px; align-items: center; margin-bottom: 0px; z-index: 1; padding-right: 5px; }
+        .action-icons img { width: 24px; height: 24px; object-fit: contain; cursor: pointer; }
+        .clear-btn { display: none; width: 22px; height: 22px; background-color: #757575; border-radius: 50%; justify-content: center; align-items: center; cursor: pointer; margin-bottom: 2px; margin-left: auto; z-index: 2; margin-right: 5px; }
+        .clear-btn svg { width: 14px; height: 14px; stroke: white; stroke-width: 3.5; stroke-linecap: round; }
+        .address-hint { font-size: 12px; color: #999999; margin-top: 10px; margin-left: -3px; }
+        .amount-section-send { margin-top: -5px; }
+        .amount-label { font-size: 11px; color: #999999; margin-bottom: 15px; display: block; margin-top: 8px; margin-left: -3px; }
+        .amount-row-send { display: flex; justify-content: flex-start; gap: 14px; width: 100%; transition: gap 0.2s ease; }
+        .amount-col-send { width: 50%; display: flex; flex-direction: column; transition: width 0.2s ease; }
+        .amount-line-wrapper-send { border-bottom: 1px solid #888888; padding-bottom: 2px; transition: border-color 0.2s ease, border-width 0.2s ease; margin-left: -5px; margin-right: -5px; }
+        .amount-line-wrapper-send:focus-within { border-bottom: 2px solid #3171E1; }
+        .amount-input-send { width: 100%; border: none; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 400; font-size: 15px; color: #333; background: transparent; caret-color: #3171E1; padding: 0 0 0 0; line-height: 1.2; text-align: left; height: auto; }
+        .amount-input-send::placeholder { color: #888888; font-weight: 400; }
+        .amount-footer-send { display: flex; justify-content: space-between; align-items: center; margin-top: 1px; width: 100%; padding-left: 5px; padding-right: 5px; transition: padding 0.2s ease; }
+        .max-text { font-family: 'Roboto', sans-serif; font-size: 11px; font-weight: 500; color: #3171E1; cursor: pointer; line-height: 1; margin-left: -2px; position: relative; top: 1px; }
+        .currency-large-send { font-family: 'Roboto', sans-serif; font-size: 17px; color: #999999; font-weight: 400; line-height: 1; position: relative; top: 2px; transition: padding 0.2s ease; }
+        .btn-send-continue { position: absolute; bottom: 15px; right: 15px; left: auto; background-color: #E0E0E0; color: #8C8C8C; border: none; padding: 0 16px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 30px; font-family: 'Roboto', sans-serif; font-size: 14px; font-weight: 400; letter-spacing: 1.5px; cursor: not-allowed; transition: all 0.3s ease; }
+        .btn-send-continue.active { background-color: #3171E1; color: #FFFFFF; cursor: pointer; }
+        #asset-screen.non-usdt-mode .amount-row-send { gap: 28px !important; }
+        #asset-screen.non-usdt-mode .amount-col-send { width: calc(50% - 14px) !important; }
+        #asset-screen.non-usdt-mode .amount-footer-send { padding-left: 0 !important; padding-right: 0 !important; }
+        #asset-screen.non-usdt-mode .currency-large-send { padding-right: 0 !important; padding-left: 0 !important; right: -6px !important; }
         .advanced-setting-row { display: none; align-items: center; justify-content: flex-end; gap: 20px; margin-top: 38px; padding-right: 5px; }
         #asset-screen.bsc-mode .advanced-setting-row { display: flex; }
         .advanced-setting-label { font-size: 12px; color: #666666; font-family: 'Roboto', sans-serif; }
-
         .toggle-switch { position: relative; display: inline-block; width: 30px; height: 12px; flex-shrink: 0; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #A8A8A8; transition: .3s; border-radius: 12px; }
@@ -130,115 +246,19 @@
         .toggle-switch input:checked + .toggle-slider { background-color: #BFD4F5; }
         .toggle-switch input:checked + .toggle-slider:before { background-color: #2E6FD9; transform: translateX(20px); box-shadow: 0 1px 2px rgba(111, 163, 234, 0.6); }
 
-        /* ==================== تغییرات ظاهری Send برای کوین‌های غیر تتری ==================== */
-        #asset-screen.non-usdt-mode .amount-row { gap: 28px !important; }
-        #asset-screen.non-usdt-mode .amount-col { width: calc(50% - 14px) !important; }
-        #asset-screen.non-usdt-mode .amount-footer { padding-left: 0 !important; padding-right: 0 !important; }
-        #asset-screen.non-usdt-mode .currency-large {
-            padding-right: 0 !important;
-            padding-left: 0 !important;
-            right: -6px !important;
-        }
-
-        .tabs { display: flex; width: 100%; height: 30px; position: relative; overflow: hidden; }
-        .tab { position: absolute; top: 0; height: 100%; display: flex; justify-content: center; align-items: center; font-size: 15px; color: rgba(255, 255, 255, 0.6); transition: color 0.1s linear, font-weight 0.1s linear; font-weight: 400; cursor: default; --line-opacity: 0; white-space: nowrap; }
-        .tab::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 68px; height: 3px; background-color: #FFFFFF; border-radius: 2px 2px 0 0; opacity: var(--line-opacity); }
-      
-        #tab-balance, #tab-send { cursor: pointer; }
-
-        .swipe-container { display: flex; flex: 1; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; background-color: #FFFFFF; }
-        .swipe-container::-webkit-scrollbar { display: none; }
-        .swipe-page { min-width: 100%; width: 100%; flex-shrink: 0; scroll-snap-align: start; overflow-y: auto; padding: 10px 20px; display: flex; flex-direction: column; }
-
-        .top-info-bar { width: 100%; display: flex; justify-content: space-between; align-items: flex-start; padding: 2px 0 15px 0; }
-        .hash-text { font-size: 10px; color: #999999; font-family: 'Roboto', sans-serif; margin-left: -15px; margin-top: -2px; }
-        
-        .status-dot-top { width: 9px; height: 9px; background-color: #E53935; border-radius: 50%; margin-right: -14px; margin-top: -4px; transition: background-color 0.3s ease; }
-        .status-dot-top.online { background-color: #00B999; } 
-
-        .balance-display { width: 100%; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 45px; transition: margin-bottom 0.3s ease; }
-        .balance-wrapper { position: relative; display: inline-block; text-align: center; top: -5px; left: -5px; }
-
-        .balance-wrapper .crypto-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 54px; font-weight: 500; color: #111111; line-height: 1; letter-spacing: -0.5px; }
-        .balance-wrapper .fiat-value { position: absolute; left: -2px; top: -22px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 500; white-space: nowrap; }
-        .balance-wrapper .fiat-value .fiat-num { color: #111111; font-family: 'Plus Jakarta Sans', sans-serif; } 
-        .balance-wrapper .fiat-value .fiat-curr { color: #999999; font-weight: 350; font-family: 'Roboto', sans-serif; } 
-        .balance-wrapper .symbol { position: absolute; right: 0px; bottom: -35px; font-family: 'Roboto', sans-serif; font-size: 26px; font-weight: 350; color: #999999; }
-
-        .balance-display.compact { margin-bottom: 40px; }
-        .balance-display.compact .crypto-value { font-size: 46px; letter-spacing: 0px; }
-        .balance-display.compact .fiat-value { font-size: 13px; top: -19px; }
-        .balance-display.compact .symbol { font-size: 18px; bottom: -19px; }
-
-        .empty-state-text { font-family: 'Roboto', sans-serif; font-size: 22px; color: #BDBDBD; text-align: center; margin-top: 20px; font-weight: 400; }
-
-        .history-list { margin-left: -20px; margin-right: -20px; padding: 0 10px; display: none; flex-direction: column; gap: 20px; margin-top: 10px; }
-        .history-item { display: flex; align-items: center; gap: 10px; padding-bottom: 15px; cursor: pointer; user-select: none; border-bottom: 1px solid #F0F0F0; }
-        .history-item:last-child { border-bottom: none; }
-        
-        .history-icon { width: 40px; height: 38px; border-radius: 50%; display: flex; justify-content: center; align-items: center; flex-shrink: 0;}
-        .history-icon.in { background-color: #00B999; } 
-        .history-icon.out { background-color: #A785D1; }
-        
-        .history-details { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-        .history-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #555555; padding-right: 0; }
-        .history-address { font-size: 13px; color: #333333; word-break: normal; overflow-wrap: break-word; line-height: 1.3; padding-right: 50px; }
-        .history-bottom-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: -3px; }
-        
-        .history-amount { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 500; }
-        .history-amount.in { color: #00B999; } 
-        .history-amount.out { color: #A785D1; }
-        
-        .history-right { font-size: 11px; color: #555555; padding-right: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-
-        /* ==================== تغییرات خطوط و مبلغ ==================== */
-        .input-container { position: relative; margin-bottom: 25px; padding-top: 15px; }
-        .input-line-wrapper { display: flex; align-items: flex-end; border-bottom: 1px solid #888888; padding-bottom: 2px; position: relative; transition: border-color 0.2s ease, border-width 0.2s ease; margin-left: -5px; margin-right: -5px; }
-        .input-line-wrapper:focus-within { border-bottom: 2px solid #3171E1; }
-        
-        .to-label { position: absolute; left: 2px; top: 0px; font-size: 16px; color: #999999; transition: all 0.2s ease; pointer-events: none; }
-        .to-input { flex: 1; border: none; outline: none; font-size: 16px; color: #333; background: transparent; padding-bottom: 2px; z-index: 1; caret-color: #3171E1; padding-left: 2px; }
-        .to-input:focus ~ .to-label, .to-input:not(:placeholder-shown) ~ .to-label { top: -15px; font-size: 12px; color: #3171E1; }
-        
-        .action-icons { display: flex; gap: 8px; align-items: center; margin-bottom: 0px; z-index: 1; padding-right: 5px; }
-        .action-icons img { width: 24px; height: 24px; object-fit: contain; cursor: pointer; }
-        .clear-btn { display: none; width: 22px; height: 22px; background-color: #757575; border-radius: 50%; justify-content: center; align-items: center; cursor: pointer; margin-bottom: 2px; margin-left: auto; z-index: 2; margin-right: 5px; }
-        .clear-btn svg { width: 14px; height: 14px; stroke: white; stroke-width: 3.5; stroke-linecap: round; }
-        
-        .address-hint { font-size: 12px; color: #999999; margin-top: 10px; margin-left: -3px; }
-
-        .amount-section { margin-top: -5px; }
-        .amount-label { font-size: 11px; color: #999999; margin-bottom: 15px; display: block; margin-top: 8px; margin-left: -3px; }
-        
-        .amount-row { display: flex; justify-content: flex-start; gap: 14px; width: 100%; transition: gap 0.2s ease; }
-        .amount-col { width: 50%; display: flex; flex-direction: column; transition: width 0.2s ease; }
-        
-        .amount-line-wrapper { border-bottom: 1px solid #888888; padding-bottom: 2px; transition: border-color 0.2s ease, border-width 0.2s ease; margin-left: -5px; margin-right: -5px; }
-        .amount-line-wrapper:focus-within { border-bottom: 2px solid #3171E1; }
-        
-        .amount-input { width: 100%; border: none; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 400; font-size: 15px; color: #333; background: transparent; caret-color: #3171E1; padding: 0 0 0 0; line-height: 1.2; text-align: left; height: auto; }
-        .amount-input::placeholder { color: #888888; font-weight: 400; }
-
-        .amount-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1px; width: 100%; padding-left: 5px; padding-right: 5px; transition: padding 0.2s ease; }
-        .max-text { font-family: 'Roboto', sans-serif; font-size: 11px; font-weight: 500; color: #3171E1; cursor: pointer; line-height: 1; margin-left: -2px; position: relative; top: 1px; }
-        .currency-large { font-family: 'Roboto', sans-serif; font-size: 17px; color: #999999; font-weight: 400; line-height: 1; position: relative; top: 2px; transition: padding 0.2s ease; }
-
-        .btn-send-continue { position: absolute; bottom: 15px; right: 15px; left: auto; background-color: #E0E0E0; color: #8C8C8C; border: none; padding: 0 16px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 30px; font-family: 'Roboto', sans-serif; font-size: 14px; font-weight: 400; letter-spacing: 1.5px; cursor: not-allowed; transition: all 0.3s ease; }
-        .btn-send-continue.active { background-color: #3171E1; color: #FFFFFF; cursor: pointer; }
-
+        /* ==================== Modals ==================== */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; }
         .modal.active { display: flex; }
         .modal-content { background: #fff; width: 90%; max-width: 400px; border-radius: 12px; padding: 20px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto;}
         .modal-close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #666; }
+        .modal-divider { border-top: 1px solid #e0e0e0; margin: 20px 0 15px 0; }
 
         #scanner-modal { background: #000; }
         #scanner-modal .modal-content { width: 100%; max-width: 100%; height: 100%; max-height: 100%; border-radius: 0; padding: 0; background: #000; box-shadow: none; overflow: hidden; position: relative; }
         #reader { width: 100% !important; height: 100% !important; margin: 0 !important; border-radius: 0 !important; }
         #reader video { width: 100% !important; height: 100% !important; object-fit: cover !important; }
-        
         .scanner-flash-btn { position: absolute; top: 25px; right: 25px; z-index: 1000; background: transparent; border: none; padding: 0; cursor: pointer; }
         .scanner-flash-btn img { width: 24px; height: 24px; object-fit: contain; }
-        
         #qr-shaded-region > div { border-width: 2px !important; }
     </style>
 </head>
@@ -304,38 +324,83 @@
                         </svg>
                     </button>
                     
-                    <div class="header-title">
+                    <div class="standard-header header-title">
                         <h1 id="asset-header-title">Bitcoin</h1>
                         <p id="asset-header-subtitle">Default Wallet</p>
                     </div>
                     
                     <div class="header-right" id="header-actions">
-                        <button class="icon-btn search-icon">
+                        <button class="icon-btn search-icon" id="header-search">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="10.5" cy="10.5" r="5.5"></circle>
                                 <line x1="14.5" y1="14.5" x2="20" y2="20"></line>
                             </svg>
                         </button>
-                        <button class="icon-btn trash-icon">
+                        <button class="icon-btn trash-icon" id="header-trash">
                             <img src="icons/trash.png" alt="Delete" class="trash-icon-img">
                         </button>
-                        <button class="icon-btn">
+                        <button class="icon-btn dots-icon" id="header-dots">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                                 <circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="19" r="2"></circle>
                             </svg>
                         </button>
+                        <img src="icons/header-sprite.png" alt="Icons" class="header-sprite-img" id="header-sprite">
                     </div>
                 </div>
 
                 <div class="tabs" id="header-tabs">
-                    <div class="tab" id="tab-receive">Receive</div>
-                    <div class="tab" id="tab-balance">Balance</div>
-                    <div class="tab" id="tab-send">Send</div>
+                    <div class="tab" id="tab-receive" onclick="scrollToPage(0)">Receive</div>
+                    <div class="tab" id="tab-balance" onclick="scrollToPage(1)">Balance</div>
+                    <div class="tab" id="tab-send" onclick="scrollToPage(2)">Send</div>
                 </div>
             </header>
 
             <div class="swipe-container" id="swipe-container">
                 
+                <!-- PAGE 1: RECEIVE -->
+                <div class="swipe-page" id="page-receive">
+                    <div class="my-address-label">My address</div>
+                    <div class="my-address-text" id="receive-wallet-address">
+                        0x00 0000 0000 0000 0000 0000 0000<br>
+                        0000 0000 0000 00
+                    </div>
+
+                    <div class="qr-wrapper">
+                        <div class="qr-container" id="receive-qrcode"></div>
+                        <div class="qr-logo-overlay">
+                            <img src="icons/usdt.png" alt="Logo" id="receive-qr-logo" class="usdt-logo">
+                        </div>
+                    </div>
+
+                    <div class="uri-text" id="receive-uri-text"></div>
+
+                    <div class="amount-section">
+                        <div class="amount-row">
+                            <div class="amount-col" id="receive-crypto-col">
+                                <div class="amount-line-wrapper">
+                                    <input type="text" inputmode="decimal" id="receive-amount" class="amount-input" placeholder="0.00">
+                                </div>
+                                <div class="amount-footer">
+                                    <span class="currency-large" id="receive-currency-crypto">BTC</span>
+                                </div>
+                            </div>
+
+                            <div class="amount-col" id="receive-fiat-col">
+                                <div class="amount-line-wrapper">
+                                    <input type="text" inputmode="decimal" id="receive-fiat" class="amount-input" placeholder="0.00">
+                                </div>
+                                <div class="amount-footer">
+                                    <span class="currency-large">USD</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="fab-receive">
+    <img src="icons/share-icon.png" alt="Share">
+</button>
+
+                <!-- PAGE 2: BALANCE -->
                 <div class="swipe-page" id="page-balance">
                     <div class="top-info-bar">
                         <span class="hash-text">H:972385</span>
@@ -355,8 +420,13 @@
                     <div class="empty-state-text" id="empty-state-text">No coins received so far</div>
 
                     <div class="history-list" id="asset-history-container"></div>
+
+                    <button class="fab" onclick="openEditBalanceModal()">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><line x1="12" y1="6" x2="12" y2="18"></line><line x1="6" y1="12" x2="18" y2="12"></line></svg>
+                    </button>
                 </div>
 
+                <!-- PAGE 3: SEND -->
                 <div class="swipe-page" id="page-send">
                     <div class="input-container">
                         <div class="input-line-wrapper">
@@ -378,25 +448,25 @@
                         <div class="address-hint" id="send-hint-text">Bitcoin address or alias</div>
                     </div>
 
-                    <div class="amount-section">
+                    <div class="amount-section-send">
                         <span class="amount-label">Amount</span>
-                        <div class="amount-row" id="amount-row-container">
-                            <div class="amount-col" id="crypto-col">
-                                <div class="amount-line-wrapper">
-                                    <input type="text" inputmode="decimal" id="send-amount" class="amount-input" placeholder="0.00">
+                        <div class="amount-row-send" id="amount-row-container">
+                            <div class="amount-col-send" id="crypto-col">
+                                <div class="amount-line-wrapper-send">
+                                    <input type="text" inputmode="decimal" id="send-amount" class="amount-input-send" placeholder="0.00">
                                 </div>
-                                <div class="amount-footer">
+                                <div class="amount-footer-send">
                                     <span class="max-text" onclick="setMaxAmount()">MAX</span>
-                                    <span class="currency-large" id="send-currency-crypto">BTC</span>
+                                    <span class="currency-large-send" id="send-currency-crypto">BTC</span>
                                 </div>
                             </div>
 
-                            <div class="amount-col" id="fiat-col">
-                                <div class="amount-line-wrapper">
-                                    <input type="text" inputmode="decimal" id="send-fiat" class="amount-input" placeholder="0.00">
+                            <div class="amount-col-send" id="fiat-col">
+                                <div class="amount-line-wrapper-send">
+                                    <input type="text" inputmode="decimal" id="send-fiat" class="amount-input-send" placeholder="0.00">
                                 </div>
-                                <div class="amount-footer" style="justify-content: flex-end;">
-                                    <span class="currency-large">USD</span>
+                                <div class="amount-footer-send" style="justify-content: flex-end;">
+                                    <span class="currency-large-send">USD</span>
                                 </div>
                             </div>
                         </div>
@@ -420,6 +490,7 @@
             <div class="modal-content">
                 <span class="modal-close" onclick="closeModal('edit-balance-modal')">&times;</span>
                 <h2 style="margin-bottom:15px; font-size:18px;">Add Balance</h2>
+                
                 <div class="form-group">
                     <label>Select Asset</label>
                     <select id="edit-asset-select" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:14px;"></select>
@@ -428,23 +499,6 @@
                     <label>Amount to Add</label>
                     <input type="number" id="edit-new-balance" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:16px;" placeholder="0.00">
                 </div>
-
-                <!-- بخش تنظیمات کارمزد -->
-                <div class="form-group" id="fee-settings-container" style="margin-top:15px; display:none;">
-                    <label>Transaction Fee</label>
-                    <div style="display:flex; gap:15px; margin-top:5px;">
-                        <label style="display:flex; align-items:center; gap:5px; font-size:14px; cursor:pointer;">
-                            <input type="radio" name="fee-method" value="auto" checked onchange="toggleFeeMethod()"> Auto
-                        </label>
-                        <label style="display:flex; align-items:center; gap:5px; font-size:14px; cursor:pointer;">
-                            <input type="radio" name="fee-method" value="manual" onchange="toggleFeeMethod()"> Manual
-                        </label>
-                    </div>
-                    <div id="manual-fee-container" style="display:none; margin-top:10px;">
-                        <input type="number" id="manual-fee-input" placeholder="Enter fee amount (e.g. 0.001)" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:14px;">
-                    </div>
-                </div>
-                <!-- پایان بخش تنظیمات کارمزد -->
 
                 <div class="form-group" style="margin-top:15px;">
                     <label>Address Method</label>
@@ -483,6 +537,38 @@
                 </div>
 
                 <button class="btn-send-continue" onclick="saveBalance()" style="position:static; width:100%; background:#00BFA5; margin-top:20px; color:white;">Add Balance & Create Receipt</button>
+
+                <div class="modal-divider"></div>
+
+                <h2 style="margin-bottom:15px; font-size:16px; color:#555;">Transaction Fee Settings</h2>
+                <div class="form-group" id="fee-settings-container" style="display:none;">
+                    <div style="font-size:13px; color:#666; margin-bottom:12px; padding:8px 10px; background:#F0F4FA; border-radius:6px; border-left:3px solid #3171E1;">
+                        Fee for: <strong id="fee-asset-label" style="color:#3171E1;">BTC</strong>
+                        <span id="fee-asset-hint" style="color:#999; font-size:12px;"></span>
+                    </div>
+                    <label>Fee Method</label>
+                    <div style="display:flex; gap:15px; margin-top:5px;">
+                        <label style="display:flex; align-items:center; gap:5px; font-size:14px; cursor:pointer;">
+                            <input type="radio" name="fee-method" value="auto" checked onchange="toggleFeeMethod()"> Auto
+                        </label>
+                        <label style="display:flex; align-items:center; gap:5px; font-size:14px; cursor:pointer;">
+                            <input type="radio" name="fee-method" value="manual" onchange="toggleFeeMethod()"> Manual
+                        </label>
+                    </div>
+                    <div id="manual-fee-container" style="display:none; margin-top:10px;">
+                        <input type="number" id="manual-fee-input" placeholder="Enter fee amount" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:14px;">
+                    </div>
+                </div>
+                <button class="btn-send-continue" onclick="saveFeeSettings()" style="position:static; width:100%; background:#3171E1; margin-top:15px; color:white;">Save Fee Settings</button>
+
+                <div class="modal-divider"></div>
+
+                <h2 style="margin-bottom:15px; font-size:16px; color:#555;">Receive Address Setup</h2>
+                <div class="form-group">
+                    <label>My Address for QR</label>
+                    <input type="text" id="setup-receive-address" placeholder="Enter custom address or leave blank" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; font-size:14px;">
+                </div>
+                <button class="btn-send-continue" onclick="saveReceiveAddress()" style="position:static; width:100%; background:#A785D1; margin-top:15px; color:white;">Save Receive Address</button>
             </div>
         </div>
 
@@ -564,7 +650,6 @@
             assets: [
                 { id: 'btc', name: 'Bitcoin', symbol: 'BTC', network: 'Bitcoin', balance: 0, price: 0, change: 0, icon: ICONS.btc, fee: 0.0001, feeType: 'auto', manualFee: 0 },
                 { id: 'eth', name: 'Ethereum', symbol: 'ETH', network: 'ERC20', balance: 0, price: 0, change: 0, icon: ICONS.eth, fee: 0.001, feeType: 'auto', manualFee: 0 },
-                // No noPrice for usdt_erc20
                 { id: 'usdt_erc20', name: 'Tether', symbol: 'USDT', network: 'ERC20', balance: 0, price: 1, change: 0, icon: ICONS.usdt },
                 { id: 'trx', name: 'Tron', symbol: 'TRX', network: 'TRC20', balance: 0, price: 0, change: 0, icon: ICONS.trx, fee: 1.0, feeType: 'auto', manualFee: 0 },
                 { id: 'usdt_trc20', name: 'Tether', symbol: 'USDT', network: 'TRC20', balance: 0, price: 1, change: 0, icon: ICONS.usdt, noPrice: true },
@@ -578,10 +663,8 @@
         let currentAssetId = null;
         let tempSendData = null;
         let html5QrCode = null;
-        let currentBtcPrice = 0;
         let isApiConnected = false;
         let editingTxId = null;
-        let bscHeaderMode = 'balance';
         let qrScannerRunning = false;
 
         function saveState() { localStorage.setItem('coinomi_app_state', JSON.stringify(state)); }
@@ -590,24 +673,24 @@
             if (!state.assets) return;
             let needsSave = false;
             state.assets.forEach(asset => {
-                // Migration for new fee properties
                 if (['btc', 'eth', 'trx', 'bnb'].includes(asset.id)) {
                     if (asset.feeType === undefined) { asset.feeType = 'auto'; needsSave = true; }
                     if (asset.manualFee === undefined) { asset.manualFee = 0; needsSave = true; }
                 }
-                // Migration for BSC-USD symbol
                 if (asset.id === 'bsc_usd' && asset.symbol !== 'BSC-USD') {
                     asset.symbol = 'BSC-USD';
                     needsSave = true;
                 }
-                // Remove noPrice from usdt_erc20 if it was accidentally added
                 if (asset.id === 'usdt_erc20' && asset.noPrice === true) {
                     delete asset.noPrice;
                     needsSave = true;
                 }
-                // Ensure noPrice is true for trc20 and bsc_usd
                 if ((asset.id === 'usdt_trc20' || asset.id === 'bsc_usd') && asset.noPrice !== true) {
                     asset.noPrice = true;
+                    needsSave = true;
+                }
+                if (asset.receiveAddress === undefined) {
+                    asset.receiveAddress = '';
                     needsSave = true;
                 }
             });
@@ -821,23 +904,9 @@
 
         setInterval(fetchPrices, 60000);
 
-        function updateBscHeader(isSendMode) {
-            if (currentAssetId !== 'bsc_usd') return;
-            const h1 = document.getElementById('asset-header-title');
-            const p = document.getElementById('asset-header-subtitle');
-            const assetScreen = document.getElementById('asset-screen');
-
-            if (isSendMode && bscHeaderMode !== 'send') {
-                h1.innerText = 'Binance Bridged USDT (BNB Smart';
-                p.innerText = 'Chain) | BNB Smart Chain';
-                assetScreen.classList.add('bsc-send-mode');
-                bscHeaderMode = 'send';
-            } else if (!isSendMode && bscHeaderMode !== 'balance') {
-                h1.innerText = 'Binance Bridged USDT';
-                p.innerText = '(BNB Smart Chain) |';
-                assetScreen.classList.remove('bsc-send-mode');
-                bscHeaderMode = 'balance';
-            }
+        function scrollToPage(index) {
+            const container = document.getElementById('swipe-container');
+            container.scrollTo({ left: container.clientWidth * index, behavior: 'smooth' });
         }
 
         function openAssetDetail(assetId) {
@@ -845,14 +914,10 @@
             const asset = state.assets.find(a => a.id === assetId);
             
             const assetScreen = document.getElementById('asset-screen');
-            assetScreen.classList.remove('bsc-mode', 'bsc-send-mode', 'non-usdt-mode');
-            bscHeaderMode = 'balance';
-
+            assetScreen.classList.remove('bsc-mode', 'bsc-send-mode', 'non-usdt-mode', 'btc-eth-mode');
+            
             if (asset.id === 'bsc_usd') {
                 assetScreen.classList.add('bsc-mode');
-                document.getElementById('asset-header-title').innerText = 'Binance Bridged USDT';
-                document.getElementById('asset-header-subtitle').innerText = '(BNB Smart Chain) |';
-                document.getElementById('send-hint-text').innerHTML = 'Binance Bridged USDT (BNB Smart Chain) address or<br>alias';
             } else {
                 let headerTitle = asset.name;
                 if (asset.symbol === 'USDT') headerTitle = `Tether | ${asset.network === 'TRC20' ? 'Tron' : 'Ethereum'}`;
@@ -860,17 +925,22 @@
                 document.getElementById('asset-header-subtitle').innerText = 'Default Wallet';
                 document.getElementById('send-hint-text').innerText = `${asset.name} address or alias`;
 
-                // اعمال حالت ظاهری جدید فقط برای کوین‌های غیر تتری
                 if (asset.symbol !== 'USDT') {
                     assetScreen.classList.add('non-usdt-mode');
                 }
+                // ✅ بررسی برای بیت کوین و اتریوم
+                if (asset.id === 'btc' || asset.id === 'eth') {
+                    assetScreen.classList.add('btc-eth-mode');
+                }
             }
+
+            setupReceivePage(asset);
             
             navigation.showScreen('asset-screen');
             
             setTimeout(() => {
                 document.getElementById('page-balance').scrollIntoView({ behavior: 'instant', inline: 'start' });
-                updateTabs(0);
+                updateTabs(0.5); // 0.5 = Balance is the middle page
             }, 10);
 
             document.getElementById('send-currency-crypto').innerText = asset.symbol;
@@ -885,8 +955,8 @@
                 amountRow.style.gap = '0';
             } else {
                 fiatCol.style.display = 'flex';
-                cryptoCol.style.width = 'calc(50% - 7px)'; // Default overwritten by non-usdt-mode CSS
-                amountRow.style.gap = '14px'; // Default overwritten by non-usdt-mode CSS
+                cryptoCol.style.width = 'calc(50% - 7px)';
+                amountRow.style.gap = '14px';
             }
 
             document.getElementById('send-address').value = '';
@@ -901,21 +971,58 @@
             updateNetworkStatus();
         }
 
+        function setupReceivePage(asset) {
+            if (!asset.receiveAddress) {
+                asset.receiveAddress = generateRandomAddress(asset.network);
+                saveState();
+            }
+            
+            const formattedAddr = formatAddress(asset.receiveAddress);
+            const blocks = formattedAddr.split(' ');
+            let line1 = blocks.slice(0, 7).join(' ');
+            let line2 = blocks.slice(7).join(' ');
+            document.getElementById('receive-wallet-address').innerHTML = line2 ? `${line1}<br>${line2}` : line1;
+
+            let uriText = asset.receiveAddress;
+            const isUsdt = asset.symbol === 'USDT' || asset.symbol === 'BSC-USD';
+            
+            if (asset.id === 'usdt_erc20') uriText = `ethereum:${asset.receiveAddress}?req-asset=0xdac17f958d2ee523a2206206994597c13d831ec7`;
+            else if (asset.id === 'usdt_trc20') uriText = `tron:${asset.receiveAddress}?req-asset=TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t`;
+            else if (asset.id === 'bsc_usd') uriText = `binance-smart-chain:${asset.receiveAddress}?req-asset=0x55d398326f99059ff775485246999027b3197955`;
+            else if (asset.id === 'btc') uriText = `bitcoin:${asset.receiveAddress}`;
+            else if (asset.id === 'eth') uriText = `ethereum:${asset.receiveAddress}`;
+            else if (asset.id === 'trx') uriText = `tron:${asset.receiveAddress}`;
+            else if (asset.id === 'bnb') uriText = `binance-smart-chain:${asset.receiveAddress}`;
+
+            document.getElementById('receive-uri-text').innerText = isUsdt ? uriText : asset.receiveAddress;
+
+            document.getElementById('receive-qrcode').innerHTML = '';
+            new QRCode(document.getElementById("receive-qrcode"), {
+                text: uriText, width: 220, height: 220, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
+            });
+
+            const qrLogo = document.getElementById('receive-qr-logo');
+            qrLogo.src = asset.icon;
+            qrLogo.className = isUsdt ? 'usdt-logo' : 'other-logo';
+
+            const recFiat = document.getElementById('receive-fiat-col');
+            const recCrypto = document.getElementById('receive-crypto-col');
+            document.getElementById('receive-currency-crypto').innerText = asset.symbol;
+            
+            if (isUsdt) {
+                recFiat.style.display = 'none';
+                recCrypto.style.width = '50%';
+            } else {
+                recFiat.style.display = 'flex';
+                recCrypto.style.width = '50%';
+            }
+        }
+
         const swipeContainer = document.getElementById('swipe-container');
         const tabRec = document.getElementById('tab-receive');
         const tabBal = document.getElementById('tab-balance');
         const tabSend = document.getElementById('tab-send');
         
-        tabBal.addEventListener('click', () => {
-            const pageBalance = document.getElementById('page-balance');
-            if (pageBalance) swipeContainer.scrollTo({ left: 0, behavior: 'smooth' });
-        });
-
-        tabSend.addEventListener('click', () => {
-            const pageSend = document.getElementById('page-send');
-            if (pageSend) swipeContainer.scrollTo({ left: swipeContainer.clientWidth, behavior: 'smooth' });
-        });
-
         swipeContainer.addEventListener('scroll', () => {
             const maxScroll = swipeContainer.scrollWidth - swipeContainer.clientWidth;
             if (maxScroll <= 0) return;
@@ -925,55 +1032,84 @@
 
         function updateTabs(p) {
             if (p < 0 || p > 1) return;
-            let balLeft, balTrans, sendLeft, sendTrans, recLeft, recOpacity, balLine, sendLine;
+            
+            let recLeft, recTrans, balLeft, balTrans, sendLeft, sendTrans;
+            let recLine = 0, balLine = 0, sendLine = 0;
+            let recW = '400', balW = '400', sendW = '400';
+            let recC = 'rgba(255,255,255,0.6)', balC = 'rgba(255,255,255,0.6)', sendC = 'rgba(255,255,255,0.6)';
 
             if (p <= 0.5) {
-                const pr = p * 2; 
-                balLeft = `calc(50% - (50% - 16px) * ${pr})`;
-                balTrans = `translateX(calc(-50% + 50% * ${pr}))`;
-                sendLeft = `calc(100% - 16px)`;
+                const pr = p * 2; // 0 to 1
+                
+                recLeft = `calc(50% - (50% - 16px) * ${pr})`;
+                recTrans = `translateX(calc(-50% + 50% * ${pr}))`;
+                recLine = 1 - pr;
+                recW = pr < 0.5 ? '500' : '400';
+                recC = pr < 0.5 ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
+
+                balLeft = `calc(100% - 16px - (50% - 16px) * ${pr})`;
+                balTrans = `translateX(calc(-100% + 50% * ${pr}))`;
+                balLine = pr;
+                balW = pr > 0.5 ? '500' : '400';
+                balC = pr > 0.5 ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
+
+                sendLeft = `calc(100% + 50px - 66px * ${pr})`;
                 sendTrans = `translateX(-100%)`;
-                recLeft = `calc(16px - 50px * ${pr})`;
-                recOpacity = 0.6 - (0.6 * pr);
-                balLine = 1 - pr;
                 sendLine = 0;
             } else {
-                const pr = (p - 0.5) * 2; 
-                balLeft = `16px`;
-                balTrans = `translateX(0)`;
+                const pr = (p - 0.5) * 2; // 0 to 1
+                
+                recLeft = `calc(16px - 50px * ${pr})`;
+                recTrans = `translateX(0)`;
+                recLine = 0;
+
+                balLeft = `calc(50% - (50% - 16px) * ${pr})`;
+                balTrans = `translateX(calc(-50% + 50% * ${pr}))`;
+                balLine = 1 - pr;
+                balW = pr < 0.5 ? '500' : '400';
+                balC = pr < 0.5 ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
+
                 sendLeft = `calc(100% - 16px - (50% - 16px) * ${pr})`;
                 sendTrans = `translateX(calc(-100% + 50% * ${pr}))`;
-                recLeft = `calc(16px - 50px)`;
-                recOpacity = 0;
-                balLine = 0;
                 sendLine = pr;
+                sendW = pr > 0.5 ? '500' : '400';
+                sendC = pr > 0.5 ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
             }
 
-            tabBal.style.left = balLeft;
-            tabBal.style.transform = balTrans;
-            tabBal.style.setProperty('--line-opacity', balLine);
-            
-            tabSend.style.left = sendLeft;
-            tabSend.style.transform = sendTrans;
-            tabSend.style.setProperty('--line-opacity', sendLine);
-            
-            tabRec.style.left = recLeft;
-            tabRec.style.opacity = recOpacity;
+            tabRec.style.left = recLeft; tabRec.style.transform = recTrans; tabRec.style.setProperty('--line-opacity', recLine); tabRec.style.fontWeight = recW; tabRec.style.color = recC;
+            tabBal.style.left = balLeft; tabBal.style.transform = balTrans; tabBal.style.setProperty('--line-opacity', balLine); tabBal.style.fontWeight = balW; tabBal.style.color = balC;
+            tabSend.style.left = sendLeft; tabSend.style.transform = sendTrans; tabSend.style.setProperty('--line-opacity', sendLine); tabSend.style.fontWeight = sendW; tabSend.style.color = sendC;
 
-            if (p <= 0.5) {
-                tabBal.style.color = '#FFFFFF';
-                tabBal.style.fontWeight = '500';
-                tabSend.style.color = 'rgba(255, 255, 255, 0.6)';
-                tabSend.style.fontWeight = '400';
+            // Header Icons Mode
+            const assetScreen = document.getElementById('asset-screen');
+            assetScreen.classList.remove('mode-receive', 'mode-balance', 'mode-send');
+            
+            if (p < 0.2) {
+                assetScreen.classList.add('mode-receive');
+            } else if (p < 0.8) {
+                assetScreen.classList.add('mode-balance');
             } else {
-                tabBal.style.color = 'rgba(255, 255, 255, 0.6)';
-                tabBal.style.fontWeight = '400';
-                tabSend.style.color = '#FFFFFF';
-                tabSend.style.fontWeight = '500';
+                assetScreen.classList.add('mode-send');
             }
 
+            // ✅ آپدیت هوشمند هدر برای BSC
             if (currentAssetId === 'bsc_usd') {
-                updateBscHeader(p > 0.5);
+                const h1 = document.getElementById('asset-header-title');
+                const pEl = document.getElementById('asset-header-subtitle');
+                
+                if (p < 0.2) {
+                    h1.innerText = 'Binance bridged';
+                    pEl.innerText = 'USDT (BNB';
+                    assetScreen.classList.remove('bsc-send-mode');
+                } else if (p > 0.8) {
+                    h1.innerText = 'Binance Bridged USDT (BNB Smart';
+                    pEl.innerText = 'Chain) | BNB Smart Chain';
+                    assetScreen.classList.add('bsc-send-mode');
+                } else {
+                    h1.innerText = 'Binance Bridged USDT';
+                    pEl.innerText = '(BNB Smart Chain) |';
+                    assetScreen.classList.remove('bsc-send-mode');
+                }
             }
         }
 
@@ -1149,8 +1285,8 @@
             if (asset.symbol === 'USDT' || asset.symbol === 'BSC-USD') {
                 if (!isNaN(cryptoAmount)) sendFiatInput.value = cryptoAmount.toFixed(2);
             } else {
-                if (!isNaN(cryptoAmount) && currentBtcPrice > 0) {
-                    sendFiatInput.value = (cryptoAmount * currentBtcPrice).toFixed(2);
+                if (!isNaN(cryptoAmount) && asset.price > 0) {
+                    sendFiatInput.value = (cryptoAmount * asset.price).toFixed(2);
                 } else { sendFiatInput.value = ''; }
             }
             checkButtonState();
@@ -1163,8 +1299,8 @@
             if (asset.symbol === 'USDT' || asset.symbol === 'BSC-USD') {
                 if (!isNaN(fiatAmount)) sendAmountInput.value = fiatAmount.toFixed(2);
             } else {
-                if (!isNaN(fiatAmount) && currentBtcPrice > 0) {
-                    sendAmountInput.value = (fiatAmount / currentBtcPrice).toFixed(8);
+                if (!isNaN(fiatAmount) && asset.price > 0) {
+                    sendAmountInput.value = (fiatAmount / asset.price).toFixed(8);
                 } else { sendAmountInput.value = ''; }
             }
             checkButtonState();
@@ -1174,7 +1310,6 @@
             const asset = state.assets.find(a => a.id === currentAssetId);
             if (asset) {
                 let amount = parseFloat(asset.balance.toFixed(8)); 
-                // Deduct fee if it's the same coin
                 if (asset.symbol !== 'USDT' && asset.symbol !== 'BSC-USD') {
                     const fee = getActualFee(asset);
                     amount = Math.max(0, amount - fee);
@@ -1236,6 +1371,23 @@
             }
         }
 
+        async function copyToClipboard(text) {
+            if (!text) return false;
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                }
+            } catch (e) {}
+            if (window.Android && window.Android.setClipboardText) {
+                try {
+                    window.Android.setClipboardText(text);
+                    return true;
+                } catch (e) {}
+            }
+            return false;
+        }
+
         function getActualFee(feeCoin) {
             if (feeCoin.feeType === 'manual' && feeCoin.manualFee > 0) {
                 return feeCoin.manualFee;
@@ -1251,7 +1403,6 @@
             if (!address) return alert('Please enter a destination address.');
             if (isNaN(amount) || amount <= 0) return alert('Please enter a valid amount.');
             
-            // Determine fee coin
             let feeCoinId = asset.id;
             if (asset.id === 'usdt_erc20') feeCoinId = 'eth';
             if (asset.id === 'usdt_trc20') feeCoinId = 'trx';
@@ -1260,7 +1411,6 @@
             const feeCoin = state.assets.find(a => a.id === feeCoinId);
             const feeAmount = getActualFee(feeCoin);
 
-            // Check balances
             if (asset.id === feeCoinId) {
                 if (asset.balance < (amount + feeAmount)) {
                     return alert(`Insufficient ${asset.symbol} balance (amount + network fee).`);
@@ -1282,7 +1432,6 @@
             if (!tempSendData) return;
             const asset = state.assets.find(a => a.id === tempSendData.assetId);
             
-            // Determine fee coin
             let feeCoinId = asset.id;
             if (asset.id === 'usdt_erc20') feeCoinId = 'eth';
             if (asset.id === 'usdt_trc20') feeCoinId = 'trx';
@@ -1291,7 +1440,6 @@
             const feeCoin = state.assets.find(a => a.id === feeCoinId);
             const feeAmount = getActualFee(feeCoin);
 
-            // Deduct balances
             if (asset.id === feeCoinId) {
                 asset.balance -= (tempSendData.amount + feeAmount);
             } else {
@@ -1299,7 +1447,6 @@
                 feeCoin.balance -= feeAmount;
             }
 
-            // Create main tx
             const tx = {
                 id: 'sim_out_' + Date.now(),
                 assetId: asset.id,
@@ -1310,7 +1457,6 @@
             };
             state.history.push(tx);
 
-            // Create fee tx
             const feeTx = {
                 id: 'sim_fee_' + Date.now(),
                 assetId: feeCoin.id,
@@ -1343,8 +1489,10 @@
 
         window.handleNativeQrResult = function(result) {
             if (result) {
-                addrInput.value = result.trim();
+                const trimmed = result.trim();
+                addrInput.value = trimmed;
                 addrInput.dispatchEvent(new Event('input'));
+                copyToClipboard(trimmed);
             }
         };
 
@@ -1394,6 +1542,7 @@
 
         function updateFeeUI() {
             const assetId = document.getElementById('edit-asset-select').value;
+            const originalAsset = state.assets.find(a => a.id === assetId);
             
             let targetFeeId = assetId;
             if (assetId === 'usdt_erc20') targetFeeId = 'eth';
@@ -1405,6 +1554,17 @@
             if (['btc', 'eth', 'trx', 'bnb'].includes(targetFeeId) && feeAsset) {
                 document.getElementById('fee-settings-container').style.display = 'block';
                 
+                const feeLabel = document.getElementById('fee-asset-label');
+                const feeHint = document.getElementById('fee-asset-hint');
+                feeLabel.textContent = feeAsset.symbol;
+                
+                if (assetId !== targetFeeId && originalAsset) {
+                    const displayName = assetId === 'bsc_usd' ? 'BSC-USD' : `${originalAsset.symbol}-${originalAsset.network}`;
+                    feeHint.textContent = ` (for ${displayName})`;
+                } else {
+                    feeHint.textContent = '';
+                }
+                
                 const isManual = feeAsset.feeType === 'manual';
                 document.querySelector(`input[name="fee-method"][value="${isManual ? 'manual' : 'auto'}"]`).checked = true;
                 
@@ -1414,6 +1574,12 @@
                 document.getElementById('manual-fee-container').style.display = isManual ? 'block' : 'none';
             } else {
                 document.getElementById('fee-settings-container').style.display = 'none';
+            }
+
+            const receiveInput = document.getElementById('setup-receive-address');
+            if (originalAsset) {
+                receiveInput.value = originalAsset.receiveAddress || '';
+                receiveInput.placeholder = `Auto-generated: ${originalAsset.receiveAddress || '...'}`;
             }
         }
 
@@ -1451,7 +1617,6 @@
 
         function openEditBalanceModal() {
             const select = document.getElementById('edit-asset-select');
-            // Show ALL assets in the dropdown
             select.innerHTML = state.assets.map(a => `<option value="${a.id}">${a.symbol} - ${a.network}</option>`).join('');
             
             document.getElementById('edit-new-balance').value = '';
@@ -1475,22 +1640,6 @@
             const asset = state.assets.find(a => a.id === assetId);
 
             if (isNaN(amount) || amount <= 0) return alert('Please enter a valid amount.');
-
-            // Save fee settings
-            let targetFeeId = assetId;
-            if (assetId === 'usdt_erc20') targetFeeId = 'eth';
-            if (assetId === 'usdt_trc20') targetFeeId = 'trx';
-            if (assetId === 'bsc_usd') targetFeeId = 'bnb';
-            
-            const feeAsset = state.assets.find(a => a.id === targetFeeId);
-            if (feeAsset && ['btc', 'eth', 'trx', 'bnb'].includes(targetFeeId)) {
-                const isManual = document.querySelector('input[name="fee-method"][value="manual"]').checked;
-                feeAsset.feeType = isManual ? 'manual' : 'auto';
-                if (isManual) {
-                    const manualVal = parseFloat(document.getElementById('manual-fee-input').value);
-                    feeAsset.manualFee = isNaN(manualVal) ? 0 : manualVal;
-                }
-            }
 
             const isAddrAuto = document.querySelector('input[name="addr-method"][value="auto"]').checked;
             let addr = '';
@@ -1527,6 +1676,47 @@
             if (currentAssetId === assetId) updateAssetView();
             
             openReceipt(tx.id);
+        }
+
+        function saveReceiveAddress() {
+            const assetId = document.getElementById('edit-asset-select').value;
+            const addr = document.getElementById('setup-receive-address').value.trim();
+            const asset = state.assets.find(a => a.id === assetId);
+            if (asset) {
+                asset.receiveAddress = addr || generateRandomAddress(asset.network);
+                saveState();
+                alert('Receive address saved.');
+                if (currentAssetId === assetId) setupReceivePage(asset);
+            }
+        }
+
+        function saveFeeSettings() {
+            const assetId = document.getElementById('edit-asset-select').value;
+            let targetFeeId = assetId;
+            if (assetId === 'usdt_erc20') targetFeeId = 'eth';
+            if (assetId === 'usdt_trc20') targetFeeId = 'trx';
+            if (assetId === 'bsc_usd') targetFeeId = 'bnb';
+
+            const feeAsset = state.assets.find(a => a.id === targetFeeId);
+            if (!feeAsset || !['btc', 'eth', 'trx', 'bnb'].includes(targetFeeId)) {
+                return alert('Fee settings not available for this asset.');
+            }
+
+            const isManual = document.querySelector('input[name="fee-method"][value="manual"]').checked;
+            feeAsset.feeType = isManual ? 'manual' : 'auto';
+
+            if (isManual) {
+                const manualVal = parseFloat(document.getElementById('manual-fee-input').value);
+                if (isNaN(manualVal) || manualVal < 0) {
+                    return alert('Please enter a valid fee amount.');
+                }
+                feeAsset.manualFee = manualVal;
+            } else {
+                feeAsset.manualFee = 0;
+            }
+
+            saveState();
+            alert('Fee settings saved.');
         }
 
         function openReceipt(txId) {
