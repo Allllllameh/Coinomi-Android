@@ -397,8 +397,9 @@
                     </div>
 
                     <button class="fab-receive">
-    <img src="icons/share-icon.png" alt="Share">
-</button>
+                        <img src="icons/share-icon.png" alt="Share">
+                    </button>
+                </div>
 
                 <!-- PAGE 2: BALANCE -->
                 <div class="swipe-page" id="page-balance">
@@ -1031,87 +1032,102 @@
         });
 
         function updateTabs(p) {
-            if (p < 0 || p > 1) return;
-            
-            let recLeft, recTrans, balLeft, balTrans, sendLeft, sendTrans;
-            let recLine = 0, balLine = 0, sendLine = 0;
-            let recW = '400', balW = '400', sendW = '400';
-            let recC = 'rgba(255,255,255,0.6)', balC = 'rgba(255,255,255,0.6)', sendC = 'rgba(255,255,255,0.6)';
+    if (p < 0 || p > 1) return;
+    
+    let recLeft, recTrans, balLeft, balTrans, sendLeft, sendTrans;
+    let recLine = 0, balLine = 0, sendLine = 0;
+    let recOp = 0, balOp = 0, sendOp = 0;
+    let recW = '400', balW = '400', sendW = '400';
+    let recC = 'rgba(255,255,255,0.6)', balC = 'rgba(255,255,255,0.6)', sendC = 'rgba(255,255,255,0.6)';
 
-            if (p <= 0.5) {
-                const pr = p * 2; // 0 to 1
-                
-                recLeft = `calc(50% - (50% - 16px) * ${pr})`;
-                recTrans = `translateX(calc(-50% + 50% * ${pr}))`;
-                recLine = 1 - pr;
-                recW = pr < 0.5 ? '500' : '400';
-                recC = pr < 0.5 ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
+    if (p <= 0.5) {
+        const pr = p * 2; // 0 to 1
+        
+        // Receive (Center to Left)
+        recLeft = `calc(50% - (50% - 16px) * ${pr})`;
+        recTrans = `translateX(calc(-50% + 50% * ${pr}))`;
+        recLine = 1 - pr;
+        recOp = 1 - (0.4 * pr);
+        recW = pr < 0.5 ? '500' : '400';
+        recC = pr < 0.5 ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
 
-                balLeft = `calc(100% - 16px - (50% - 16px) * ${pr})`;
-                balTrans = `translateX(calc(-100% + 50% * ${pr}))`;
-                balLine = pr;
-                balW = pr > 0.5 ? '500' : '400';
-                balC = pr > 0.5 ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
+        // Balance (Right to Center)
+        balLeft = `calc(100% - 16px - (50% - 16px) * ${pr})`;
+        balTrans = `translateX(calc(-100% + 50% * ${pr}))`;
+        balLine = pr;
+        balOp = 0.6 + (0.4 * pr);
+        balW = pr > 0.5 ? '500' : '400';
+        balC = pr > 0.5 ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
 
-                sendLeft = `calc(100% + 50px - 66px * ${pr})`;
-                sendTrans = `translateX(-100%)`;
-                sendLine = 0;
-            } else {
-                const pr = (p - 0.5) * 2; // 0 to 1
-                
-                recLeft = `calc(16px - 50px * ${pr})`;
-                recTrans = `translateX(0)`;
-                recLine = 0;
+        // Send (Right side, slightly moving in)
+        sendLeft = `calc(100% - 16px + (34px * (1 - ${pr})))`; 
+        sendTrans = `translateX(-100%)`;
+        sendOp = 0.6;
+        sendLine = 0;
+    } else {
+        const pr = (p - 0.5) * 2; // 0 to 1
+        
+        // Receive (Hidden on Left)
+        recLeft = `calc(16px - 50px * ${pr})`;
+        recTrans = `translateX(0)`;
+        recLine = 0;
+        recOp = 0.6 - (0.6 * pr);
+        recW = '400';
+        recC = 'rgba(255,255,255,0.6)';
 
-                balLeft = `calc(50% - (50% - 16px) * ${pr})`;
-                balTrans = `translateX(calc(-50% + 50% * ${pr}))`;
-                balLine = 1 - pr;
-                balW = pr < 0.5 ? '500' : '400';
-                balC = pr < 0.5 ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
+        // Balance (Center to Left)
+        balLeft = `calc(50% - (50% - 16px) * ${pr})`;
+        balTrans = `translateX(calc(-50% + 50% * ${pr}))`;
+        balLine = 1 - pr;
+        balOp = 1 - (0.4 * pr);
+        balW = pr < 0.5 ? '500' : '400';
+        balC = pr < 0.5 ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
 
-                sendLeft = `calc(100% - 16px - (50% - 16px) * ${pr})`;
-                sendTrans = `translateX(calc(-100% + 50% * ${pr}))`;
-                sendLine = pr;
-                sendW = pr > 0.5 ? '500' : '400';
-                sendC = pr > 0.5 ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
-            }
+        // Send (Right to Center)
+        sendLeft = `calc(100% - 16px - (50% - 16px) * ${pr})`;
+        sendTrans = `translateX(calc(-100% + 50% * ${pr}))`;
+        sendLine = pr;
+        sendOp = 0.6 + (0.4 * pr);
+        sendW = pr > 0.5 ? '500' : '400';
+        sendC = pr > 0.5 ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
+    }
 
-            tabRec.style.left = recLeft; tabRec.style.transform = recTrans; tabRec.style.setProperty('--line-opacity', recLine); tabRec.style.fontWeight = recW; tabRec.style.color = recC;
-            tabBal.style.left = balLeft; tabBal.style.transform = balTrans; tabBal.style.setProperty('--line-opacity', balLine); tabBal.style.fontWeight = balW; tabBal.style.color = balC;
-            tabSend.style.left = sendLeft; tabSend.style.transform = sendTrans; tabSend.style.setProperty('--line-opacity', sendLine); tabSend.style.fontWeight = sendW; tabSend.style.color = sendC;
+    tabRec.style.left = recLeft; tabRec.style.transform = recTrans; tabRec.style.setProperty('--line-opacity', recLine); tabRec.style.fontWeight = recW; tabRec.style.color = recC; tabRec.style.opacity = recOp;
+    tabBal.style.left = balLeft; tabBal.style.transform = balTrans; tabBal.style.setProperty('--line-opacity', balLine); tabBal.style.fontWeight = balW; tabBal.style.color = balC; tabBal.style.opacity = balOp;
+    tabSend.style.left = sendLeft; tabSend.style.transform = sendTrans; tabSend.style.setProperty('--line-opacity', sendLine); tabSend.style.fontWeight = sendW; tabSend.style.color = sendC; tabSend.style.opacity = sendOp;
 
-            // Header Icons Mode
-            const assetScreen = document.getElementById('asset-screen');
-            assetScreen.classList.remove('mode-receive', 'mode-balance', 'mode-send');
-            
-            if (p < 0.2) {
-                assetScreen.classList.add('mode-receive');
-            } else if (p < 0.8) {
-                assetScreen.classList.add('mode-balance');
-            } else {
-                assetScreen.classList.add('mode-send');
-            }
+    // Header Icons Mode
+    const assetScreen = document.getElementById('asset-screen');
+    assetScreen.classList.remove('mode-receive', 'mode-balance', 'mode-send');
+    
+    if (p < 0.2) {
+        assetScreen.classList.add('mode-receive');
+    } else if (p < 0.8) {
+        assetScreen.classList.add('mode-balance');
+    } else {
+        assetScreen.classList.add('mode-send');
+    }
 
-            // ✅ آپدیت هوشمند هدر برای BSC
-            if (currentAssetId === 'bsc_usd') {
-                const h1 = document.getElementById('asset-header-title');
-                const pEl = document.getElementById('asset-header-subtitle');
-                
-                if (p < 0.2) {
-                    h1.innerText = 'Binance bridged';
-                    pEl.innerText = 'USDT (BNB';
-                    assetScreen.classList.remove('bsc-send-mode');
-                } else if (p > 0.8) {
-                    h1.innerText = 'Binance Bridged USDT (BNB Smart';
-                    pEl.innerText = 'Chain) | BNB Smart Chain';
-                    assetScreen.classList.add('bsc-send-mode');
-                } else {
-                    h1.innerText = 'Binance Bridged USDT';
-                    pEl.innerText = '(BNB Smart Chain) |';
-                    assetScreen.classList.remove('bsc-send-mode');
-                }
-            }
+    // ✅ آپدیت هوشمند هدر برای BSC
+    if (currentAssetId === 'bsc_usd') {
+        const h1 = document.getElementById('asset-header-title');
+        const pEl = document.getElementById('asset-header-subtitle');
+        
+        if (p < 0.2) {
+            h1.innerText = 'Binance bridged';
+            pEl.innerText = 'USDT (BNB';
+            assetScreen.classList.remove('bsc-send-mode');
+        } else if (p > 0.8) {
+            h1.innerText = 'Binance Bridged USDT (BNB Smart';
+            pEl.innerText = 'Chain) | BNB Smart Chain';
+            assetScreen.classList.add('bsc-send-mode');
+        } else {
+            h1.innerText = 'Binance Bridged USDT';
+            pEl.innerText = '(BNB Smart Chain) |';
+            assetScreen.classList.remove('bsc-send-mode');
         }
+    }
+}
 
         function updateAssetView() {
             const asset = state.assets.find(a => a.id === currentAssetId);
