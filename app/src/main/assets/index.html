@@ -161,12 +161,15 @@
         #page-receive .qr-wrapper { display: flex; justify-content: center; margin-top: 75px; margin-bottom: 10px; position: relative; }
         #page-receive .qr-container { position: relative; width: 240px; height: 240px; background: #fff; padding: 10px; border-radius: 8px; }
         
-        /* ✅ دایره بزرگتر شد و فاصله لوگوها کمتر شد */
+        /* ✅ دایره و لوگوها فیکس شدند */
 #page-receive .qr-logo-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 54px; height: 54px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 5px rgba(0,0,0,0.1); z-index: 10; padding: 2px; }
-#page-receive .qr-logo-overlay img.usdt-logo { width: 95%; height: 95%; object-fit: contain; }
-#page-receive .qr-logo-overlay img.other-logo { width: 85%; height: 85%; object-fit: contain; }
-      
-        #page-receive .uri-text { font-family: 'Roboto', sans-serif; font-size: 11px; color: #888; text-align: center; line-height: 1.4; margin-top: 0px; margin-bottom: 30px; word-break: break-all; padding: 0 10px; }
+
+/* همه لوگوها (تتر و بقیه) دقیقا یک سایز و در مرکزیت */
+#page-receive .qr-logo-overlay img.usdt-logo,
+#page-receive .qr-logo-overlay img.other-logo { width: 80%; height: 80%; object-fit: contain; }
+
+/* ✅ فونت آدرس زیر بارکد بزرگتر شد */
+#page-receive .uri-text { font-family: 'Roboto', sans-serif; font-size: 13px; color: #888; text-align: center; line-height: 1.4; margin-top: 0px; margin-bottom: 30px; word-break: break-all; padding: 0 10px; }
         #page-receive .amount-section { margin-top: auto; padding-top: 20px; margin-bottom: 40px; }
         #page-receive .amount-row { display: flex; justify-content: space-between; gap: 8px; width: 100%; }
         #page-receive .amount-col { width: 50%; display: flex; flex-direction: column; }
@@ -998,7 +1001,7 @@
             else if (asset.id === 'trx') uriText = `tron:${asset.receiveAddress}`;
             else if (asset.id === 'bnb') uriText = `binance-smart-chain:${asset.receiveAddress}`;
 
-            document.getElementById('receive-uri-text').innerText = isUsdt ? uriText : asset.receiveAddress;
+            document.getElementById('receive-uri-text').innerText = uriText;
 
             document.getElementById('receive-qrcode').innerHTML = '';
             new QRCode(document.getElementById("receive-qrcode"), {
