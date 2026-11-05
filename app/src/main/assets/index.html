@@ -1013,16 +1013,17 @@
             qrLogo.className = isUsdt ? 'usdt-logo' : 'other-logo';
 
             const recFiat = document.getElementById('receive-fiat-col');
-            const recCrypto = document.getElementById('receive-crypto-col');
-            document.getElementById('receive-currency-crypto').innerText = asset.symbol;
-            
-            if (isUsdt) {
-                recFiat.style.display = 'none';
-                recCrypto.style.width = '50%';
-            } else {
-                recFiat.style.display = 'flex';
-                recCrypto.style.width = '50%';
-            }
+const recCrypto = document.getElementById('receive-crypto-col');
+document.getElementById('receive-currency-crypto').innerText = asset.symbol;
+
+// ✅ فقط برای BSC-USD خط دلاری مخفی میشه، بقیه تترها دو خطی میشن
+if (asset.id === 'bsc_usd') {
+    recFiat.style.display = 'none';
+    recCrypto.style.width = '50%';
+} else {
+    recFiat.style.display = 'flex';
+    recCrypto.style.width = '50%';
+}
         }
 
         const swipeContainer = document.getElementById('swipe-container');
