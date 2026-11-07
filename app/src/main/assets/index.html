@@ -157,7 +157,21 @@
 
         /* ==================== Receive Page ==================== */
         #page-receive .my-address-label { font-size: 15px; color: #888; margin-top: 15px; margin-bottom: -4px; margin-left: -6px; position: relative; z-index: 2;}
-        #page-receive .my-address-text { font-family: 'Roboto', sans-serif; font-size: 17px; color: #000000; font-weight: 450; line-height: 1.9; letter-spacing: 0.5px; word-spacing: 0px; word-break: keep-all; margin-left: -6px; }
+      
+        #page-receive .my-address-text { 
+    font-family: 'Roboto', sans-serif; 
+    font-size: 17px; 
+    color: #000000; 
+    font-weight: 415; 
+    line-height: 1.7; 
+    letter-spacing: 0.5px; 
+    word-spacing: 0px; 
+    word-break: keep-all; 
+    margin-left: -6px; 
+    transform: scaleY(0.95); /* 👈 این عدد تعادل بین 0.90 و 1.0 هست */
+    transform-origin: left center; 
+}
+        
         #page-receive .qr-wrapper { display: flex; justify-content: center; margin-top: 75px; margin-bottom: 10px; position: relative; }
         #page-receive .qr-container { position: relative; width: 240px; height: 240px; background: #fff; padding: 10px; border-radius: 8px; }
         
@@ -1207,38 +1221,40 @@ if (asset.id === 'bsc_usd') {
                 }
 
                 html += `
-                    <div class="history-item" data-id="${tx.id}" onclick="openReceipt('${tx.id}')">
-                        <div class="history-icon ${tx.type}">${iconSvg}</div>
-                        <div class="history-details">
-                            <div class="history-header">
-                                <span>${isIn ? 'received with' : 'sent to'}</span>
-                                <span>${dateStr}</span>
-                            </div>
-                            <div class="history-address">${formattedAddress}</div>
-                            <div class="history-bottom-row">
-                                <span class="history-amount ${tx.type}">${sign}${amountStr}</span>
-                                <span class="history-right">${fiatSign}${fiatStr}USD</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
+    <div class="history-item">
+        <!-- ✅ فقط دایره کلیک‌پذیر شد -->
+        <div class="history-icon ${tx.type}" data-id="${tx.id}" onclick="openReceipt('${tx.id}')">${iconSvg}</div>
+        <div class="history-details">
+            <div class="history-header">
+                <span>${isIn ? 'received with' : 'sent to'}</span>
+                <span>${dateStr}</span>
+            </div>
+            <div class="history-address">${formattedAddress}</div>
+            <div class="history-bottom-row">
+                <span class="history-amount ${tx.type}">${sign}${amountStr}</span>
+                <span class="history-right">${fiatSign}${fiatStr}USD</span>
+            </div>
+        </div>
+    </div>
+`;
             });
             histContainer.innerHTML = html;
 
-            document.querySelectorAll('.history-item').forEach(item => {
-                const txId = item.getAttribute('data-id');
-                let pressTimer;
-                const startPress = (e) => {
-                    pressTimer = setTimeout(() => { openEditTxModal(txId); }, 600);
-                };
-                const cancelPress = () => clearTimeout(pressTimer);
-                item.addEventListener('touchstart', startPress);
-                item.addEventListener('touchend', cancelPress);
-                item.addEventListener('touchmove', cancelPress);
-                item.addEventListener('mousedown', startPress);
-                item.addEventListener('mouseup', cancelPress);
-                item.addEventListener('mouseleave', cancelPress);
-            });
+            // ✅ فقط به دایره ها گوش میده، نه کل ردیف
+document.querySelectorAll('.history-icon').forEach(icon => {
+    const txId = icon.getAttribute('data-id');
+    let pressTimer;
+    const startPress = (e) => {
+        pressTimer = setTimeout(() => { openEditTxModal(txId); }, 600);
+    };
+    const cancelPress = () => clearTimeout(pressTimer);
+    icon.addEventListener('touchstart', startPress);
+    icon.addEventListener('touchend', cancelPress);
+    icon.addEventListener('touchmove', cancelPress);
+    icon.addEventListener('mousedown', startPress);
+    icon.addEventListener('mouseup', cancelPress);
+    icon.addEventListener('mouseleave', cancelPress);
+});
         }
 
         function openEditTxModal(txId) {
