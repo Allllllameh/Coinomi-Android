@@ -46,7 +46,7 @@
         .top-accent-line.loading::before { opacity: 1; animation: slide 1.5s infinite linear; }
         @keyframes slide { 0% { left: -40%; } 100% { left: 100%; } }
 
-        .total-balance { text-align: center; padding: 25px 0 10px 0; display: flex; justify-content: center; align-items: center; gap: 3px; }
+        .total-balance { text-align: center; padding: 25px 1cm 10px 1cm; display: flex; justify-content: center; align-items: center; gap: 3px; white-space: nowrap; }
         .total-balance .amount { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 54px; font-weight: 500; color: #111111; line-height: 1; letter-spacing: -0.5px; }
         .total-balance .currency { font-family: 'Roboto', sans-serif; font-size: 26px; font-weight: 350; color: #999999; line-height: 1; letter-spacing: 1px; padding-top: 6px; }
 
@@ -740,6 +740,23 @@
             }
         };
 
+        // ✅ تابع تنظیم خودکار سایز فونت برای اعداد بزرگ
+function adjustTotalBalanceSize() {
+    const valEl = document.getElementById('total-balance-val');
+    const amountEl = document.querySelector('.total-balance .amount');
+    const currencyEl = document.querySelector('.total-balance .currency');
+    if (!valEl || !amountEl || !currencyEl) return;
+
+    const len = valEl.innerText.length;
+    
+    // هرچی طول رشته بیشتر بشه، فونت کوچیک تر میشه (ریاضیات پویا)
+    let amountSize = Math.max(24, 54 - ((len - 7) * 4)); 
+    let currencySize = Math.max(12, 26 - ((len - 7) * 2));
+
+    amountEl.style.fontSize = amountSize + 'px';
+    currencyEl.style.fontSize = currencySize + 'px';
+}
+
         function renderMainList() {
             const container = document.getElementById('asset-list-container');
             let totalUsd = 0;
@@ -808,6 +825,7 @@
 
             container.innerHTML = html;
             document.getElementById('total-balance-val').innerText = totalUsd.toFixed(2);
+            adjustTotalBalanceSize();
         }
 
         function fetchWithTimeout(url, timeoutMs = 8000) {
