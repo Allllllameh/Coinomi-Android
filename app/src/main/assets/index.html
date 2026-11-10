@@ -763,10 +763,14 @@ function adjustTotalBalanceSize() {
             let html = '';
 
             state.assets.forEach(asset => {
-                const assetUsd = asset.balance * (asset.price || 0);
-                totalUsd += assetUsd;
-                
-                let priceHtml = '';
+    const assetUsd = asset.balance * (asset.price || 0);
+    
+    // ✅ فقط موجودی ۴ کوین اصلی به جمع کل اضافه میشه (تترها حساب نمیشن)
+    if (['btc', 'eth', 'trx', 'bnb'].includes(asset.id)) {
+        totalUsd += assetUsd;
+    }
+    
+    let priceHtml = '';
                 if (!asset.noPrice) {
                     const changeClass = asset.change > 0 ? 'positive' : (asset.change < 0 ? 'negative' : 'neutral');
                     const sign = asset.change > 0 ? '+' : '';
@@ -791,20 +795,22 @@ function adjustTotalBalanceSize() {
                 const nameClass = isBSC ? 'multi-line' : '';
                 
                 let rightHtml;
-                if (isSimpleUsdt) {
-                    rightHtml = `
-                        <div class="asset-right">
-                            <div class="usd-value">${asset.balance.toFixed(2)} <span>${asset.symbol}</span></div>
-                        </div>
-                    `;
-                } else {
-                    rightHtml = `
-                        <div class="asset-right">
-                            <div class="usd-value">${assetUsd.toFixed(2)} <span>USD</span></div>
-                            <div class="crypto-value">${asset.balance.toFixed(2)} ${asset.symbol}</div>
-                        </div>
-                    `;
-                }
+if (isSimpleUsdt) {
+    rightHtml = `
+        <div class="asset-right">
+            <!-- ✅ ویرگول برای تترها -->
+            <div class="usd-value">${asset.balance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span>${asset.symbol}</span></div>
+        </div>
+    `;
+} else {
+    rightHtml = `
+        <div class="asset-right">
+            <!-- ✅ ویرگول برای مقدار دلاری -->
+            <div class="usd-value">${assetUsd.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span>USD</span></div>
+            <div class="crypto-value">${asset.balance.toFixed(2)} ${asset.symbol}</div>
+        </div>
+    `;
+}
 
                 html += `
                     <div class="asset-item" onclick="openAssetDetail('${asset.id}')">
@@ -824,7 +830,7 @@ function adjustTotalBalanceSize() {
             });
 
             container.innerHTML = html;
-            document.getElementById('total-balance-val').innerText = totalUsd.toFixed(2);
+            document.getElementById('total-balance-val').innerText = totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             adjustTotalBalanceSize();
         }
 
