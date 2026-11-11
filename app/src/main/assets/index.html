@@ -1183,8 +1183,9 @@ if (asset.id === 'bsc_usd') {
             
             const fiatVal = asset.balance * (asset.price || 0);
 
-            document.getElementById('balance-usd-num').innerText = fiatVal.toFixed(2);
-            document.getElementById('balance-crypto-num').innerText = asset.balance.toFixed(2); 
+            // ✅ اعمال ویرگول برای عدد دلاری و موجودی کریپتو در صفحه Balance
+document.getElementById('balance-usd-num').innerText = fiatVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+document.getElementById('balance-crypto-num').innerText = asset.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); 
             document.getElementById('balance-symbol').innerText = asset.symbol;
 
             const histContainer = document.getElementById('asset-history-container');
