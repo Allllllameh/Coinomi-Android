@@ -200,7 +200,7 @@
         .hash-text { font-size: 10px; color: #999999; font-family: 'Roboto', sans-serif; margin-left: -15px; margin-top: -2px; }
         .status-dot-top { width: 9px; height: 9px; background-color: #E53935; border-radius: 50%; margin-right: -14px; margin-top: -4px; transition: background-color 0.3s ease; }
         .status-dot-top.online { background-color: #00B999; } 
-        .balance-display { width: 100%; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 45px; transition: margin-bottom 0.3s ease; }
+        .balance-display { width: 100%; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 45px; transition: margin-bottom 0.3s ease; padding: 0 1cm; box-sizing: border-box; }
         .balance-wrapper { position: relative; display: inline-block; text-align: center; top: -5px; left: -5px; }
         .balance-wrapper .crypto-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 54px; font-weight: 500; color: #111111; line-height: 1; letter-spacing: -0.5px; }
         .balance-wrapper .fiat-value { position: absolute; left: -2px; top: -22px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 500; white-space: nowrap; }
@@ -1178,109 +1178,140 @@ if (asset.id === 'bsc_usd') {
 }
 
         function updateAssetView() {
-            const asset = state.assets.find(a => a.id === currentAssetId);
-            if (!asset) return;
-            
-            const fiatVal = asset.balance * (asset.price || 0);
+    const asset = state.assets.find(a => a.id === currentAssetId);
+    if (!asset) return;
+    
+    const fiatVal = asset.balance * (asset.price || 0);
 
-            // ✅ اعمال ویرگول برای عدد دلاری و موجودی کریپتو در صفحه Balance
-document.getElementById('balance-usd-num').innerText = fiatVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-document.getElementById('balance-crypto-num').innerText = asset.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); 
-            document.getElementById('balance-symbol').innerText = asset.symbol;
+    // ✅ فرمت کردن با ویرگول
+    const fiatStr = fiatVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const cryptoStr = asset.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-            const histContainer = document.getElementById('asset-history-container');
-            const emptyState = document.getElementById('empty-state-text');
-            const balanceDisplay = document.getElementById('balance-display');
-            const assetHist = state.history.filter(h => h.assetId === currentAssetId).sort((a,b) => b.timestamp - a.timestamp);
-            
-            if (assetHist.length === 0) {
-                balanceDisplay.classList.remove('compact');
-                histContainer.style.display = 'none';
-                emptyState.style.display = 'block';
-                return;
+    const cryptoEl = document.getElementById('balance-crypto-num');
+    const fiatWrapper = document.querySelector('.fiat-value');
+    const symbolEl = document.getElementById('balance-symbol');
+    const balanceDisplay = document.getElementById('balance-display');
+
+    cryptoEl.innerText = cryptoStr; 
+    document.getElementById('balance-usd-num').innerText = fiatStr;
+    symbolEl.innerText = asset.symbol;
+
+    const histContainer = document.getElementById('asset-history-container');
+    const emptyState = document.getElementById('empty-state-text');
+    const assetHist = state.history.filter(h => h.assetId === currentAssetId).sort((a,b) => b.timestamp - a.timestamp);
+    
+    if (assetHist.length === 0) {
+        balanceDisplay.classList.remove('compact');
+        histContainer.style.display = 'none';
+        emptyState.style.display = 'block';
+    } else {
+        balanceDisplay.classList.add('compact');
+        emptyState.style.display = 'none';
+        histContainer.style.display = 'flex';
+
+        let html = '';
+        assetHist.forEach(tx => {
+            const isIn = tx.type === 'in';
+            const now = Date.now();
+            const diffMs = now - tx.timestamp;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMins / 60);
+            let dateStr = '';
+
+            if (diffMs < 0) {
+                dateStr = new Date(tx.timestamp).toLocaleString('en-US', {month:'short', day:'numeric', year:'numeric'});
+            } else if (diffMins < 1) {
+                dateStr = 'Just now';
+            } else if (diffMins < 60) {
+                dateStr = `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+            } else if (diffHours < 24) {
+                dateStr = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            } else {
+                dateStr = new Date(tx.timestamp).toLocaleString('en-US', {month:'short', day:'numeric', year:'numeric'});
             }
 
-            balanceDisplay.classList.add('compact');
-            emptyState.style.display = 'none';
-            histContainer.style.display = 'flex';
+            let amountStr = tx.amount.toFixed(8).replace(/\.?0+$/, "");
+            if (!amountStr.includes('.')) amountStr += '.00';
+            const sign = isIn ? '+' : '-';
 
-            let html = '';
-            assetHist.forEach(tx => {
-                const isIn = tx.type === 'in';
-                const now = Date.now();
-                const diffMs = now - tx.timestamp;
-                const diffMins = Math.floor(diffMs / 60000);
-                const diffHours = Math.floor(diffMins / 60);
-                let dateStr = '';
+            let formattedAddress = tx.address;
+            if (tx.address && tx.address.length > 15 && !tx.address.includes(' ')) {
+                formattedAddress = tx.address.match(/.{1,4}/g)?.join(' ');
+            }
 
-                if (diffMs < 0) {
-                    dateStr = new Date(tx.timestamp).toLocaleString('en-US', {month:'short', day:'numeric', year:'numeric'});
-                } else if (diffMins < 1) {
-                    dateStr = 'Just now';
-                } else if (diffMins < 60) {
-                    dateStr = `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-                } else if (diffHours < 24) {
-                    dateStr = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-                } else {
-                    dateStr = new Date(tx.timestamp).toLocaleString('en-US', {month:'short', day:'numeric', year:'numeric'});
-                }
+            let fiatStrTx = (tx.amount * (asset.price||0)).toFixed(4).replace(/\.?0+$/, "");
+            if (!fiatStrTx.includes('.')) fiatStrTx += '.00';
+            const fiatSign = isIn ? '' : '-';
 
-                let amountStr = tx.amount.toFixed(8).replace(/\.?0+$/, "");
-                if (!amountStr.includes('.')) amountStr += '.00';
-                const sign = isIn ? '+' : '-';
+            let iconSvg = '';
+            if (isIn) {
+                iconSvg = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5.5" x2="12" y2="15.5"></line><polyline points="8 11.5 12 15.5 16 11.5"></polyline><path d="M4 16 Q4 19 7 19 H17 Q20 19 20 16"></path></svg>`;
+            } else {
+                iconSvg = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="15.5" x2="12" y2="5.5"></line><polyline points="8 9.5 12 5.5 16 9.5"></polyline><path d="M4 16 Q4 19 7 19 H17 Q20 19 20 16"></path></svg>`;
+            }
 
-                let formattedAddress = tx.address;
-                if (tx.address && tx.address.length > 15 && !tx.address.includes(' ')) {
-                    formattedAddress = tx.address.match(/.{1,4}/g)?.join(' ');
-                }
+            html += `
+                <div class="history-item">
+                    <div class="history-icon ${tx.type}" data-id="${tx.id}" onclick="openReceipt('${tx.id}')">${iconSvg}</div>
+                    <div class="history-details">
+                        <div class="history-header">
+                            <span>${isIn ? 'received with' : 'sent to'}</span>
+                            <span>${dateStr}</span>
+                        </div>
+                        <div class="history-address">${formattedAddress}</div>
+                        <div class="history-bottom-row">
+                            <span class="history-amount ${tx.type}">${sign}${amountStr}</span>
+                            <span class="history-right">${fiatSign}${fiatStrTx}USD</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        histContainer.innerHTML = html;
 
-                let fiatStr = (tx.amount * (asset.price||0)).toFixed(4).replace(/\.?0+$/, "");
-                if (!fiatStr.includes('.')) fiatStr += '.00';
-                const fiatSign = isIn ? '' : '-';
+        document.querySelectorAll('.history-icon').forEach(item => {
+            const txId = item.getAttribute('data-id');
+            let pressTimer;
+            const startPress = (e) => {
+                pressTimer = setTimeout(() => { openEditTxModal(txId); }, 600);
+            };
+            const cancelPress = () => clearTimeout(pressTimer);
+            item.addEventListener('touchstart', startPress);
+            item.addEventListener('touchend', cancelPress);
+            item.addEventListener('touchmove', cancelPress);
+            item.addEventListener('mousedown', startPress);
+            item.addEventListener('mouseup', cancelPress);
+            item.addEventListener('mouseleave', cancelPress);
+        });
+    }
 
-                let iconSvg = '';
-                if (isIn) {
-                    iconSvg = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5.5" x2="12" y2="15.5"></line><polyline points="8 11.5 12 15.5 16 11.5"></polyline><path d="M4 16 Q4 19 7 19 H17 Q20 19 20 16"></path></svg>`;
-                } else {
-                    iconSvg = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="15.5" x2="12" y2="5.5"></line><polyline points="8 9.5 12 5.5 16 9.5"></polyline><path d="M4 16 Q4 19 7 19 H17 Q20 19 20 16"></path></svg>`;
-                }
+    // ✅ کوچیک کردن هوشمند فونت (به جای transform)
+    const isCompact = balanceDisplay.classList.contains('compact');
+    let baseC = isCompact ? 46 : 54;
+    let baseF = isCompact ? 13 : 16;
+    let baseS = isCompact ? 18 : 26;
 
-                html += `
-    <div class="history-item">
-        <!-- ✅ فقط دایره کلیک‌پذیر شد -->
-        <div class="history-icon ${tx.type}" data-id="${tx.id}" onclick="openReceipt('${tx.id}')">${iconSvg}</div>
-        <div class="history-details">
-            <div class="history-header">
-                <span>${isIn ? 'received with' : 'sent to'}</span>
-                <span>${dateStr}</span>
-            </div>
-            <div class="history-address">${formattedAddress}</div>
-            <div class="history-bottom-row">
-                <span class="history-amount ${tx.type}">${sign}${amountStr}</span>
-                <span class="history-right">${fiatSign}${fiatStr}USD</span>
-            </div>
-        </div>
-    </div>
-`;
-            });
-            histContainer.innerHTML = html;
-
-            // ✅ فقط به دایره ها گوش میده، نه کل ردیف
-document.querySelectorAll('.history-icon').forEach(icon => {
-    const txId = icon.getAttribute('data-id');
-    let pressTimer;
-    const startPress = (e) => {
-        pressTimer = setTimeout(() => { openEditTxModal(txId); }, 600);
-    };
-    const cancelPress = () => clearTimeout(pressTimer);
-    icon.addEventListener('touchstart', startPress);
-    icon.addEventListener('touchend', cancelPress);
-    icon.addEventListener('touchmove', cancelPress);
-    icon.addEventListener('mousedown', startPress);
-    icon.addEventListener('mouseup', cancelPress);
-    icon.addEventListener('mouseleave', cancelPress);
-});
-        }
+    const maxLen = Math.max(cryptoStr.length, fiatStr.length);
+    
+    if (maxLen > 9) { 
+        // به ازای هر کاراکتر اضافه، ۸ درصد کوچیک‌تر میشه (حداقل ۵۰ درصد سایز اصلی)
+        const shrink = Math.max(0.5, 1 - ((maxLen - 9) * 0.08));
+        
+        cryptoEl.style.fontSize = (baseC * shrink) + 'px';
+        fiatWrapper.style.fontSize = (baseF * shrink) + 'px';
+        symbolEl.style.fontSize = (baseS * shrink) + 'px';
+        
+        // تنظیم فاصله‌های مطلق تا بهم نریزن
+        fiatWrapper.style.top = ((isCompact ? -19 : -22) * shrink) + 'px';
+        symbolEl.style.bottom = ((isCompact ? -19 : -35) * shrink) + 'px';
+    } else {
+        cryptoEl.style.fontSize = '';
+        fiatWrapper.style.fontSize = '';
+        symbolEl.style.fontSize = '';
+        fiatWrapper.style.top = '';
+        symbolEl.style.bottom = '';
+    }
+}
 
         function openEditTxModal(txId) {
             const tx = state.history.find(h => h.id === txId);
